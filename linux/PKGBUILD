@@ -2,8 +2,8 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.5.6.chos.sk1
-pkgrel=1
+pkgver=6.5.6.chos1
+pkgrel=2
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
