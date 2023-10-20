@@ -2,3 +2,16 @@
 
 # Enable support for AMDGPU color calibration features
 CONFIG_DRM_AMD_COLOR_STEAMDECK=y
+
+
+# sk-Chimera specific config flags
+
+# Android
+CONFIG_ANDROID=y
+CONFIG_ANDROID_BINDER_IPC=y
+CONFIG_ANDROID_BINDERFS=y
+CONFIG_ANDROID_BINDER_DEVICES=""
+
+# cjktty
+CONFIG_FONT_CJK_16x16=y
+CONFIG_FONT_CJK_32x32=y
