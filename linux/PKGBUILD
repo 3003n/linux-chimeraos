@@ -2,7 +2,7 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.6.0.rc7.chos2
+pkgver=6.6.0.rc7.skchos1
 pkgrel=1
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -29,7 +29,7 @@ makedepends=(
 options=('!strip')
 _srcname=linux-chimeraos
 source=(
-  "linux-chimeraos.tar.gz::https://github.com/ChimeraOS/linux/archive/refs/tags/$_srctag.tar.gz"
+  "linux-chimeraos.tar.gz::https://github.com/3003n/linux/archive/refs/tags/$_srctag.tar.gz"
   config  # the main kernel config file
   config-chimera # our config that will be merged
   #HDR patches
@@ -38,7 +38,6 @@ source=(
   0002-bmc150.patch
   "0001-cjktty.patch::https://github.com/3003n/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
-  004-cs35l41.patch
 )
 
 validpgpkeys=(
@@ -53,7 +52,6 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         '57168ff1b8b203e435a54cc814824eab707d2f27f034df9a3fa313779aa8451cf4d86b61aef4b46ad343ead9ba9181016c2dd22ee90263ea79cc4506b3351fa5'
-        'SKIP'
         )
 
 export KBUILD_BUILD_HOST=archlinux
