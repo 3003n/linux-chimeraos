@@ -35,7 +35,7 @@ source=(
   #HDR patches
   #0001-HDR.patch
 
-  0001-hid-asus-rogally.patch
+  # 0001-hid-asus-rogally.patch
   0002-sk-chos-rogally.patch
   0002-bmc150.patch
 
@@ -50,7 +50,6 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
