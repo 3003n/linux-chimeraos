@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.6.0.chos2
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
@@ -35,10 +35,12 @@ source=(
   #HDR patches
   #0001-HDR.patch
 
+  0001-hid-asus-rogally.patch
+  0002-sk-chos-rogally.patch
   0002-bmc150.patch
-  "0001-cjktty.patch::https://github.com/3003n/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
+
+  "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
-  004-cs35l41.patch
 )
 
 validpgpkeys=(
@@ -48,11 +50,12 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        '262ff13c67dd069d191195374692963ab9258258a9b606eeac48673ec3965590059e204f78714a96e8d9e69034fd10e009b5e8b8b82d987505acd574eb337798'
         'SKIP'
         'SKIP'
         'SKIP'
-        '57168ff1b8b203e435a54cc814824eab707d2f27f034df9a3fa313779aa8451cf4d86b61aef4b46ad343ead9ba9181016c2dd22ee90263ea79cc4506b3351fa5'
+        'SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP'
         )
 
