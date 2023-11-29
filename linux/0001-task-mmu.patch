@@ -1,0 +1,15 @@
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index b67d0b234885..d5df3dba2eef 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1305,8 +1305,8 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
+ 
+ 		if (start || end != -1UL)
+ 		{
+-			start = min(start, -1) & PAGE_MASK;
+-			end = min(end, -1) & PAGE_MASK;
++			start = min(start, -1UL) & PAGE_MASK;
++			end = min(end, -1UL) & PAGE_MASK;
+ 
+ 			if (start >= end)
+ 			{
