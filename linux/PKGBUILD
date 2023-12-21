@@ -2,7 +2,7 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.6.7.chos5
+pkgver=6.6.8.chos1
 pkgrel=2
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
