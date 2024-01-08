@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.6.8.chos1
-pkgrel=5
+pkgrel=4
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
@@ -43,7 +43,7 @@ source=(
   "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0005-iio-imu-ASUS-ROG-ALLY-force-INT1-IRQ.patch"
 
   0003-sk-chos-rogally.patch
-  0004-bmc150.patch
+  # 0004-bmc150.patch
   
 )
 
@@ -54,7 +54,6 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
