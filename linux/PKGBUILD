@@ -1,12 +1,12 @@
-# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
-# Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
+# Maintainer: Denis Benato <benato.denis96@gmail.com>
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
-pkgbase=linux-chimeraos
-pkgver=6.6.8.chos1
-pkgrel=5
-pkgdesc='Linux ChimeraOS'
-_srctag=v${pkgver%.*}-${pkgver##*.}
-url="https://github.com/ChimeraOS/linux/commits/$_srctag"
+pkgbase=linux-neroreflex
+pkgver=6.6.10.nrflx1
+pkgrel=2
+pkgdesc='Linux NeroReflex'
+url="https://github.com/NeroReflex/linux-chimeraos"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
@@ -25,25 +25,25 @@ makedepends=(
   #imagemagick
   #python-sphinx
   #texlive-latexextra
+
+  clang
+  llvm
+  lld
+)
+optdepends=(
+  'dkms: build out-of-tree kernel modules'
+  'clang: needed when using dkms'
 )
 options=('!strip')
-_srcname=linux-chimeraos
+_srcname=kernel_src
+_source_url="https://github.com/NeroReflex/linux/archive/refs/tags/v6.6.10-xanmod1-chos1-fluke_v14.8-1.tar.gz"
 source=(
-  "linux-chimeraos.tar.gz::https://github.com/ChimeraOS/linux/archive/refs/tags/$_srctag.tar.gz"
+  $_source_url # the source for the kernel release
   config  # the main kernel config file
   config-chimera # our config that will be merged
 
   "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
-
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0001-iio-imu_Add_driver_for_BMI323_IMU.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0002-iio-imu-bmi323-Make-the-local-structures-static.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0004-iio-imu-Load_ROG_ALLY_mount_matrix.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0005-iio-imu-ASUS-ROG-ALLY-force-INT1-IRQ.patch"
-
-  0003-sk-chos-rogally.patch
-  0004-bmc150.patch
   
 )
 
@@ -53,19 +53,13 @@ validpgpkeys=(
   A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
-b2sums=('SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        )
+b2sums=(
+  'a71c02a7701381ccb14733b333233cc0aeb07ea99b1184ce6cd6a23348e5245083ee68265af1517cf23e26cde76c16c3204cc97fab35825d2b05f47cac3e0020' # kernel source
+  '444a1f2a8292e945e7953cfeebf02be3517633e27ccee30baf439d9cafe5af428cd1fbd1c5db03965e7e888eb5cab1feaa4da202ab458cf4fb05b49e56a3c4e5' # config
+  '17d2cd571bc843106ec2b7cec85b550901443f37779304129a05be39651eca65fa9c3f5fd575336e57c3c5af9d0ddca5277da8db742083b32d40266cf623947c' # config-chimera
+  'SKIP'
+  'SKIP'
+)
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -73,19 +67,34 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 
 _make() {
   test -s version
-  make KERNELRELEASE="$(<version)" "$@"
+  make \
+    LLVM=1 \
+    KERNELRELEASE="$(<version)" "$@"
 }
 
 prepare() {
-  mv linux-${pkgver%.*}-${pkgver##*.} $_srcname
+  dirname=$(find -maxdepth 1 -type d | grep "linux")
+  cp -r $dirname $_srcname
   cd $_srcname
+  rm -rf "$dirname"
 
   echo "Setting version..."
   echo "${pkgbase#linux}" > localversion.10-pkgname
   echo "-$pkgrel" > localversion.20-pkgrel
-  make defconfig
-  make -s kernelrelease > version
-  make mrproper
+  sed -i "s/EXTRAVERSION =[[:space:]]\{0,\}/EXTRAVERSION = -${_srcpatch}/g" Makefile
+  make \
+    LLVM=1 \
+    defconfig
+  make \
+    LLVM=1 \
+    -s kernelrelease > version
+  make \
+    LLVM=1 \
+    defconfig
+  make \
+    LLVM=1 \
+    -s kernelrelease > version
+  _make mrproper
 
   local src
   for src in "${source[@]}"; do
@@ -108,6 +117,9 @@ prepare() {
 build() {
   cd $_srcname
   _make all
+
+  cd tools/bpf/resolve_btfids
+  make all
 }
 
 _package() {
@@ -116,6 +128,7 @@ _package() {
     coreutils
     initramfs
     kmod
+    clang
   )
   optdepends=(
     'wireless-regdb: to set the correct wireless channels of your country'
@@ -149,6 +162,17 @@ _package() {
   # remove build links
   rm "$modulesdir"/build
 }
+
+_package-api-headers() {
+  pkgdesc='Kernel headers sanitized for use in userspace'
+  provides=(linux-api-headers)
+  cd $_srcname
+  _make INSTALL_HDR_PATH="$pkgdir/usr" headers_install
+
+  # use headers from libdrm
+  rm -r "$pkgdir/usr/include/drm"
+}
+
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
@@ -254,6 +278,7 @@ _package-docs() {
 pkgname=(
   "$pkgbase"
   "$pkgbase-headers"
+  "$pkgbase-api-headers"
   #"$pkgbase-docs"
 )
 for _p in "${pkgname[@]}"; do
