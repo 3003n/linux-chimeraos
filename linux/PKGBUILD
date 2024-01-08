@@ -4,7 +4,7 @@
 
 pkgbase=linux-neroreflex
 pkgver=6.6.10.nrflx1
-pkgrel=3
+pkgrel=2
 pkgdesc='Linux NeroReflex'
 url="https://github.com/NeroReflex/linux-chimeraos"
 arch=(x86_64)
@@ -55,7 +55,7 @@ validpgpkeys=(
 )
 b2sums=(
   'a71c02a7701381ccb14733b333233cc0aeb07ea99b1184ce6cd6a23348e5245083ee68265af1517cf23e26cde76c16c3204cc97fab35825d2b05f47cac3e0020' # kernel source
-  'f7bcb315c6b474e64e38f4b807860c4a8eb156cae5e351a35f420cd1ecc42f9ef9b81368b1f713456beb2f2aa11d62215c5b671841015a64d101de04911a9773' # config
+  '262ff13c67dd069d191195374692963ab9258258a9b606eeac48673ec3965590059e204f78714a96e8d9e69034fd10e009b5e8b8b82d987505acd574eb337798' # config
   '0df8705b5bf190f3778d2b984b520ac3ebe45cd3a9d25d381ad45d329182dcc36aa27f19bba49a65dba8c740bd9d25c0eac28f2fadad6b93483ec8c224379ca4' # config-chimera
   'SKIP'
   'SKIP'
