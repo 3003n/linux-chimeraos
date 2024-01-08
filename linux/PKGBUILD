@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.6.8.chos1
-pkgrel=3
+pkgrel=4
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
