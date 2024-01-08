@@ -33,10 +33,12 @@ source=(
   config  # the main kernel config file
   config-chimera # our config that will be merged
 
-  0002-sk-chos-rogally.patch
-
   "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
+
+  0003-sk-chos-rogally.patch
+  0004-bmc150.patch
+  
 )
 
 validpgpkeys=(
@@ -46,6 +48,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
