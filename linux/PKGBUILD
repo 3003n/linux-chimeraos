@@ -2,10 +2,10 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.6.13.chos1
+pkgver=6.8.rc1.chos2
 pkgrel=2
 pkgdesc='Linux ChimeraOS'
-_srctag=v${pkgver%.*}-${pkgver##*.}
+_srctag=v6.8-rc1-chos2
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
@@ -33,18 +33,10 @@ source=(
   config  # the main kernel config file
   config-chimera # our config that will be merged
 
-  "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
+  "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.7.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0001-iio-imu_Add_driver_for_BMI323_IMU.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0002-iio-imu-bmi323-Make-the-local-structures-static.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0004-iio-imu-Load_ROG_ALLY_mount_matrix.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0005-iio-imu-ASUS-ROG-ALLY-force-INT1-IRQ.patch"
-
-  0003-sk-chos-rogally.patch
-  # 0004-bmc150.patch
-  
+  0003-sk-chos-rogally.patch  
 )
 
 validpgpkeys=(
@@ -54,11 +46,6 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -76,7 +63,7 @@ _make() {
 }
 
 prepare() {
-  mv linux-${pkgver%.*}-${pkgver##*.} $_srcname
+  mv linux-6.8-rc1-chos2 $_srcname
   cd $_srcname
 
   echo "Setting version..."
