@@ -2,10 +2,10 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.8.rc2.chos1
+pkgver=6.8.rc4.chos1
 pkgrel=2
 pkgdesc='Linux ChimeraOS'
-_srctag=v6.8-rc2-chos1
+_srctag=v6.8-rc4-chos1
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
@@ -29,9 +29,12 @@ makedepends=(
 options=('!strip')
 _srcname=linux-chimeraos
 source=(
-  "linux-chimeraos.tar.gz::https://github.com/ChimeraOS/linux/archive/refs/tags/$_srctag.tar.gz"
+  "linux-chimeraos.tar.gz::https://github.com/3003n/linux/archive/refs/tags/$_srctag.tar.gz"
   config  # the main kernel config file
   config-chimera # our config that will be merged
+
+  000-drm-panel-orientation-quirks-lcd1080x1920_rightside_up.patch
+  001-drm-panel-orientation-quirks-GPD-WINMINI.patch
 
   "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.7.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
@@ -60,6 +63,8 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
+        'SKIP'
+        'SKIP'
         )
 
 export KBUILD_BUILD_HOST=archlinux
@@ -72,7 +77,7 @@ _make() {
 }
 
 prepare() {
-  mv linux-6.8-rc2-chos1 $_srcname
+  mv linux-6.8-rc4-chos1 $_srcname
   cd $_srcname
 
   echo "Setting version..."
