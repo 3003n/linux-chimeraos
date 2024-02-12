@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.6.14.chos1
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux ChimeraOS'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
@@ -33,6 +33,9 @@ source=(
   config  # the main kernel config file
   config-chimera # our config that will be merged
 
+  000-drm-panel-orientation-quirks-lcd1080x1920_rightside_up.patch
+  001-drm-panel-orientation-quirks-GPD-WINMINI.patch
+
   "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.6.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
@@ -43,8 +46,6 @@ source=(
   "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0005-iio-imu-ASUS-ROG-ALLY-force-INT1-IRQ.patch"
 
   0003-sk-chos-rogally.patch
-  # 0004-bmc150.patch
-  
 )
 
 validpgpkeys=(
@@ -54,6 +55,8 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
