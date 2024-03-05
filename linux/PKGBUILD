@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.8.rc6.chos1
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux ChimeraOS'
 _srctag=v6.8-rc6-chos1
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
@@ -36,6 +36,8 @@ source=(
   000-drm-panel-orientation-quirks-lcd1080x1920_rightside_up.patch
   001-drm-panel-orientation-quirks-GPD-WINMINI.patch
 
+  0001-amd-sfh-bump-sensitivity.patch
+
   "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.7.patch"
   "0002-cjktty-32.patch::https://github.com/zhmars/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
@@ -58,6 +60,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
