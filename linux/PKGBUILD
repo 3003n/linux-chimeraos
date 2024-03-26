@@ -2,10 +2,10 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.8.sk.chos2
-pkgrel=3
+pkgver=6.8.1.sk.chos1
+pkgrel=1
 pkgdesc='Linux ChimeraOS'
-_srctag=v6.8-chos2
+_srctag=v6.8.1-chos1-sk
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
@@ -80,7 +80,8 @@ _make() {
 }
 
 prepare() {
-  mv linux-6.8-chos2 $_srcname
+  dir=$(echo $_srctag | sed 's/^v/linux-/')
+  mv $dir $_srcname
   cd $_srcname
 
   echo "Setting version..."
