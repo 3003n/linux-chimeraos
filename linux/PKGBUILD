@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.8.5.sk.chos1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ChimeraOS'
 _srctag=v6.8.5-chos1
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
@@ -107,6 +107,8 @@ prepare() {
   diff -u ../config .config || :
 
   echo "Prepared $pkgbase version $(<version)"
+
+  sed -i 's/EXTRAVERSION = -chos/EXTRAVERSION = -sk-chos/' Makefile
 }
 
 build() {
