@@ -2,10 +2,10 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.9.sk.chos1
-pkgrel=2
+pkgver=6.9.1.sk.chos1
+pkgrel=1
 pkgdesc='Linux ChimeraOS'
-_srctag=v6.9-sk-chos1
+_srctag=v6.9.1-sk-chos1
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
@@ -47,13 +47,13 @@ source=(
   "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0004-iio-imu-Load_ROG_ALLY_mount_matrix.patch"
   "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0005-iio-imu-ASUS-ROG-ALLY-force-INT1-IRQ.patch"
 
-  "0011-amd-pstate-cbp-boost.patch"
-  "0012-amd-pstate-cbp-boost.patch"
-  "0013-amd-pstate-cbp-boost.patch"
-  "0014-amd-pstate-cbp-boost.patch"
-  "0015-amd-pstate-cbp-boost.patch"
-  "0016-amd-pstate-cbp-boost.patch"
-  "0017-amd-pstate-cbp-boost.patch"
+  # "0011-amd-pstate-cbp-boost.patch"
+  # "0012-amd-pstate-cbp-boost.patch"
+  # "0013-amd-pstate-cbp-boost.patch"
+  # "0014-amd-pstate-cbp-boost.patch"
+  # "0015-amd-pstate-cbp-boost.patch"
+  # "0016-amd-pstate-cbp-boost.patch"
+  # "0017-amd-pstate-cbp-boost.patch"
 
 )
 
@@ -64,13 +64,6 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
