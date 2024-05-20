@@ -12,6 +12,11 @@ CONFIG_HYPERVISOR_GUEST=n
 # Enable support for AMDGPU color calibration features
 CONFIG_DRM_AMD_COLOR_STEAMDECK=y
 
+# Enable BMI260 as module
+CONFIG_BMI260_I2C=m
+ 
+# Enable AW87XXX as module
+CONFIG_SND_SOC_AW87XXX=m
 
 # sk-Chimera specific config flags
 
