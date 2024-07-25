@@ -39,14 +39,9 @@ source=(
 
   # 0003-sk-chos-rogally.patch
 
-  # "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0001-iio-imu_Add_driver_for_BMI323_IMU.patch"
-  # "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0002-iio-imu-bmi323-Make-the-local-structures-static.patch"
-  # "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
-
   "0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0004-iio-imu-Load_ROG_ALLY_mount_matrix.patch"
-  "https://github.com/jlobue10/ALLY_Nobara_fixes/raw/main/0005-iio-imu-ASUS-ROG-ALLY-force-INT1-IRQ.patch"
-  "https://raw.githubusercontent.com/jlobue10/ALLY_Nobara_stuff/main/0001-sound-pci-hda-patch_realtek-fix-ALLY-X.patch"
+
+  "https://github.com/jlobue10/ALLY_Nobara_stuff/raw/main/0001-sound-pci-hda-patch_realtek-fix-ALLY-X.patch"
 
 )
 
@@ -57,8 +52,6 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        'SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
