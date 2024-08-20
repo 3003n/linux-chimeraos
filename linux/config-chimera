@@ -16,7 +16,7 @@ CONFIG_FONT_CJK_32x32=y
 # Chimera specific config flags
 
 CONFIG_HID_ASUS_ALLY=m
-CONFIG_HID_ASUS_ALLY_CFG=m
+CONFIG_ASUS_WMI_BIOS=y
 # Disable radeon module
 # CONFIG_DRM_RADEON is not set
 
