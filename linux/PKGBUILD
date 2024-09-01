@@ -44,6 +44,8 @@ source=(
 
   "0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
 
+  "ROG-ALLY-NCT6775-PLATFORM.patch"
+
   # "https://github.com/jlobue10/ALLY_Nobara_stuff/raw/main/0001-sound-pci-hda-patch_realtek-fix-ALLY-X.patch"
 
 )
@@ -55,6 +57,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
