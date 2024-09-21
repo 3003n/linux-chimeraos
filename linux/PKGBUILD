@@ -39,7 +39,6 @@ source=(
 
   # 0003-sk-chos-rogally.patch
 
-  "0001-add-ally-x-dmi-quirk-for-controller-suspend.patch"
   "0001-patch_realtek-Fix-ROG-ALLY-X-audio.patch"
 
   "0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
@@ -57,7 +56,6 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
