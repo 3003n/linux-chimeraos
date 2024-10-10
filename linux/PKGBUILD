@@ -2,10 +2,10 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.11.2.sk.chos1
+pkgver=6.11.2.sk.chos2
 pkgrel=1
 pkgdesc='Linux ChimeraOS'
-_srctag=v6.11.2-sk-chos1
+_srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 url="https://github.com/ChimeraOS/linux/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
@@ -30,8 +30,11 @@ options=('!strip')
 _srcname=linux-chimeraos
 source=(
   "linux-chimeraos.tar.gz::https://github.com/3003n/linux/archive/refs/tags/$_srctag.tar.gz"
+  https://github.com/zen-kernel/zen-kernel/releases/download/v6.11.2-zen1/linux-v6.11.2-zen1.patch.zst
+  # https://github.com/zen-kernel/zen-kernel/releases/download/v6.11.2-zen1/linux-v6.11.2-zen1.patch.zst.sig
   config  # the main kernel config file
   config-chimera # our config that will be merged
+  experiments.patch # experimental kernel patches
 
   # "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.7.patch"
   "0001-cjktty-6.9.patch"
@@ -39,7 +42,7 @@ source=(
 
   # 0003-sk-chos-rogally.patch
 
-  "0001-patch_realtek-Fix-ROG-ALLY-X-audio.patch"
+  # "0001-patch_realtek-Fix-ROG-ALLY-X-audio.patch"
 
   "0003-iio-imu_Add_ROG_ALLY_bmi323-support.patch"
 
@@ -56,6 +59,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
