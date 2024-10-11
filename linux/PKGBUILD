@@ -94,6 +94,10 @@ prepare() {
   for src in "${source[@]}"; do
     src="${src%%::*}"
     src="${src##*/}"
+
+    # if .patch.zst , remove .zst
+    [[ $src = *.patch.zst ]] && src="${src%.zst}" || :
+
     [[ $src = *.patch ]] || continue
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
