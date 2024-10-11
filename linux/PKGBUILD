@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.11.3.sk1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ChimeraOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -34,6 +34,7 @@ source=(
   # https://github.com/zen-kernel/zen-kernel/releases/download/v6.11.3-zen1/linux-v6.11.3-zen1.patch.zst
   config  # the main kernel config file
   config-chimera # our config that will be merged
+  config-sk
   experiments.patch # experimental kernel patches
 
   # "0001-cjktty.patch::https://github.com/zhmars/cjktty-patches/raw/master/v6.x/cjktty-6.7.patch"
@@ -59,6 +60,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -107,6 +109,7 @@ prepare() {
   cp ../config .config
   _make olddefconfig
   scripts/kconfig/merge_config.sh -m .config ../config-chimera
+  scripts/kconfig/merge_config.sh -m .config ../config-sk
   diff -u ../config .config || :
 
   echo "Prepared $pkgbase version $(<version)"
