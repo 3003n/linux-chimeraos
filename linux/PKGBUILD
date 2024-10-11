@@ -2,7 +2,7 @@
 # Maintainer: Joaquín I. Aramendía (samsagax) <samsagaxg@gmail.com>
 
 pkgbase=linux-chimeraos
-pkgver=6.11.2.sk.chos2
+pkgver=6.11.3.sk.chos1
 pkgrel=1
 pkgdesc='Linux ChimeraOS'
 _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
@@ -30,8 +30,7 @@ options=('!strip')
 _srcname=linux-chimeraos
 source=(
   "linux-chimeraos.tar.gz::https://github.com/3003n/linux/archive/refs/tags/$_srctag.tar.gz"
-  https://github.com/zen-kernel/zen-kernel/releases/download/v6.11.2-zen1/linux-v6.11.2-zen1.patch.zst
-  # https://github.com/zen-kernel/zen-kernel/releases/download/v6.11.2-zen1/linux-v6.11.2-zen1.patch.zst.sig
+  https://github.com/zen-kernel/zen-kernel/releases/download/v6.11.3-zen1/linux-v6.11.3-zen1.patch.zst
   config  # the main kernel config file
   config-chimera # our config that will be merged
   experiments.patch # experimental kernel patches
