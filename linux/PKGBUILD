@@ -51,6 +51,9 @@ source=(
 
   # "https://github.com/jlobue10/ALLY_Nobara_stuff/raw/main/0001-sound-pci-hda-patch_realtek-fix-ALLY-X.patch"
 
+  "0004-vrr-1.patch::https://gitlab.com/evlaV/linux-integration/-/commit/7fbd09a1b740ed016359919003947d05f054ad6b.patch"
+  "0005-vrr-2.patch::https://gitlab.com/evlaV/linux-integration/-/commit/5f96bbb94f4dc884007a22ca3e289215064d2065.patch"
+
 )
 
 validpgpkeys=(
@@ -60,6 +63,8 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
