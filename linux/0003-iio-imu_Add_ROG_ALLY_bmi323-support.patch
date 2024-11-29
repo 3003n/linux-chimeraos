@@ -1,5 +1,5 @@
 diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
-index 1105918..d665a6e 100644
+index 0f32c1e92b4d..3af2988d9e0d 100644
 --- a/drivers/iio/accel/bmc150-accel-core.c
 +++ b/drivers/iio/accel/bmc150-accel-core.c
 @@ -10,6 +10,7 @@
@@ -7,15 +7,15 @@ index 1105918..d665a6e 100644
  #include <linux/slab.h>
  #include <linux/acpi.h>
 +#include <linux/dmi.h>
- #include <linux/of_irq.h>
  #include <linux/pm.h>
  #include <linux/pm_runtime.h>
-@@ -1670,6 +1671,8 @@ int bmc150_accel_core_probe(struct device *dev, struct regmap *regmap, int irq,
- 	struct iio_dev *indio_dev;
- 	int ret;
-
+ #include <linux/property.h>
+@@ -1629,6 +1630,8 @@ int bmc150_accel_core_probe(struct device *dev, struct regmap *regmap, int irq,
+	struct iio_dev *indio_dev;
+	int ret;
+ 
 +	if (dmi_match(DMI_BOARD_NAME, "RC71L") || (dmi_match(DMI_BOARD_NAME, "AB05-AMD") && dmi_match(DMI_PRODUCT_NAME, "AIR Plus")))
 +		return -ENODEV; // Abort loading bmc150 for ASUS ROG ALLY, Ayaneo Air Plus
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
- 	if (!indio_dev)
- 		return -ENOMEM;
+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+	if (!indio_dev)
+		return -ENOMEM;
