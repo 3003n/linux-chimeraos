@@ -6,4 +6,6 @@ linux/*.zst
 linux/pkg/*
 linux/*.tar.gz
 *cjktty-32.patch
+*vrr-1.patch
+*vrr-2.patch
 testbuild.sh
