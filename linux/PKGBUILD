@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.12.6.sko3
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ChimeraOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -33,6 +33,7 @@ source=(
   "linux-chimeraos.tar.gz::https://github.com/3003n/linux/archive/refs/tags/$_srctag.tar.gz"
   config  # the main kernel config file
   config-chimera # our config that will be merged
+  config-bazzite
   config-sk
   experiments.patch # experimental kernel patches
 
@@ -64,6 +65,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -111,6 +113,7 @@ prepare() {
   cp ../config .config
   _make olddefconfig
   scripts/kconfig/merge_config.sh -m .config ../config-chimera
+  scripts/kconfig/merge_config.sh -m .config ../config-bazzite
   scripts/kconfig/merge_config.sh -m .config ../config-sk
   diff -u ../config .config || :
 
