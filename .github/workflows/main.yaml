@@ -57,7 +57,7 @@ jobs:
           full_version=${pkgver}-${pkgrel}
           echo "full_version=$full_version" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-chimeraos-package
           path: |
@@ -69,13 +69,13 @@ jobs:
     needs: [build-kernel]
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: linux-chimeraos-package
           path: ${{ env.PKGDEST }}
 
       - name: Make release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: linux-chimeraos-${{needs.build-kernel.outputs.full_version}}
           token: ${{ secrets.GITHUB_TOKEN }}
