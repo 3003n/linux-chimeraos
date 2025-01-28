@@ -3,7 +3,7 @@
 
 pkgbase=linux-chimeraos
 pkgver=6.13.sko2
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ChimeraOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}

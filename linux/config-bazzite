@@ -135,6 +135,8 @@ CONFIG_REGULATOR_QCOM_USB_VBUS=m
 CONFIG_CHARGER_QCOM_SMB5=m
 CONFIG_BATTERY_QCOM_FG=m
 
+CONFIG_ASUS_ARMOURY=m
+
 # from batoceran, ignore for now # CONFIG_DRM_HDLCD is not set
 # from batoceran, ignore for now # CONFIG_DRM_MALI_DISPLAY is not set
 # from batoceran, ignore for now # CONFIG_DRM_KOMEDA is not set
@@ -149,3 +151,17 @@ CONFIG_BATTERY_QCOM_FG=m
 
 # From Valve: Disable simple-framebuffer to fix logo regression
 # CONFIG_SYSFB_SIMPLEFB is not set
+
+# Our akmods
+CONFIG_AYN_PLATFORM=m
+CONFIG_AYANEO_PLATFORM=m
+CONFIG_BMI260=m
+CONFIG_FRAMEWORK_LAPTOP=m
+CONFIG_XONEDO=m
+CONFIG_NEW_LG4FF=m
+CONFIG_RTL8814AU=m
+CONFIG_88XXAU=m
+CONFIG_NCT6687D=m
+CONFIG_ZENERGY=m
+CONFIG_OPENRAZER=m
+CONFIG_GPD_FAN=m
