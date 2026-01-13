@@ -120,7 +120,7 @@ prepare() {
   
   # Shallow clone to get submodule info
   git clone --depth=1 --branch $_pkgver --filter=blob:none \
-    https://github.com/hhd-dev/patchwork.git "$tmpdir/patchwork" || {
+    https://github.com/bazzite-org/patchwork.git "$tmpdir/patchwork" || {
     echo "Warning: failed to clone patchwork, cleaning drivers/custom"
     find drivers/custom -type d -empty -delete
     echo "" > drivers/custom/Makefile
