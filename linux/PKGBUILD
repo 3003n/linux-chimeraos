@@ -4,8 +4,8 @@
 
 pkgbase=linux-skchos
 pkgver=6.17.7
-_pkgver=6.17.7-ba19
-pkgrel=6
+_pkgver=6.17.7-ba22
+pkgrel=7
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -37,7 +37,7 @@ options=('!strip')
 # _srcname=linux-$_pkgver
 _srcname=patchwork-$_pkgver
 source=(
-  "https://github.com/hhd-dev/patchwork/archive/refs/tags/$_pkgver.tar.gz"
+  "https://github.com/bazzite-org/patchwork/archive/refs/tags/$_pkgver.tar.gz"
   # "https://github.com/3003n/linux/archive/refs/tags/$_pkgver.tar.gz"
   config  # the main kernel config file
   # config-chimera # our config that will be merged
@@ -54,6 +54,8 @@ source=(
 
   # 0006-s5-power-v4.patch
   # 0007-asus-ally-hid.patch
+
+  0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
 
   0034-platform-x86-msi-wmi-platform-update-tdp-range.patch
   # A008-Add-EXTRAVERSION.patch
@@ -73,6 +75,7 @@ sha256sums=('SKIP'
             'a93750d533c660f7e6a8536998dc607884b6b69d934f125d6950a86c2a601d47'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '8e84679e996fddb20ec3ec9f72b13389670ce30703a8be11dd0bca0981fa4b56'
+            'c8868f3a69c8f419cbecd90da927f29334143cde6578e0362be3006972286177'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
