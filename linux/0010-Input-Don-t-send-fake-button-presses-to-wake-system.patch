@@ -1,0 +1,40 @@
+From bb1559c74732fd0a2ac52b93d38f836ad03f8b1d Mon Sep 17 00:00:00 2001
+From: Mario Limonciello <mario.limonciello@amd.com>
+Date: Wed, 25 Jun 2025 16:58:13 -0500
+Subject: [PATCH 2/2] Input: Don't send fake button presses to wake system
+
+Sending an input event to wake a system does wake it, but userspace picks
+up the keypress and processes it.  This isn't the intended behavior as it
+causes a suspended system to wake up and then potentially turn off if
+userspace is configured to turn off on power button presses.
+
+Instead send a PM wakeup event for the PM core to handle waking the system.
+
+Cc: Hans de Goede <hansg@kernel.org>
+Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/input/keyboard/gpio_keys.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index 773aa5294d26..4c6876b099c4 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+ 		pm_stay_awake(bdata->input->dev.parent);
+ 		if (bdata->suspended  &&
+ 		    (button->type == 0 || button->type == EV_KEY)) {
+-			/*
+-			 * Simulate wakeup key press in case the key has
+-			 * already released by the time we got interrupt
+-			 * handler to run.
+-			 */
+-			input_report_key(bdata->input, button->code, 1);
++			pm_wakeup_event(bdata->input->dev.parent, 0);
+ 		}
+ 	}
+ 
+-- 
+2.51.2
+

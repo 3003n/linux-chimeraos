@@ -1,0 +1,78 @@
+From ae503ace35bdf5f63f0a8f81b418b12d5b10232a Mon Sep 17 00:00:00 2001
+From: Mario Limonciello <mario.limonciello@amd.com>
+Date: Wed, 25 Jun 2025 16:58:12 -0500
+Subject: [PATCH 1/2] Input: Don't program hw debounce for soc_button_array
+ devices
+
+Programming a hardware debounce of 50ms causes problems where a button
+doesn't work properly anymore on some systems.  This debounce is intended
+for compatibility with systems with a mechanical switch so soc_button_array
+devices should only be using a sofware debounce.
+
+Add support for indicating that a driver is only requesting gpio_keys
+to use software debounce support and mark that in soc_button_array
+accordingly.
+
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+---
+ drivers/input/keyboard/gpio_keys.c    | 7 +++++--
+ drivers/input/misc/soc_button_array.c | 1 +
+ include/linux/gpio_keys.h             | 2 ++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index f9db86da0818..773aa5294d26 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+ 		bool active_low = gpiod_is_active_low(bdata->gpiod);
+ 
+ 		if (button->debounce_interval) {
+-			error = gpiod_set_debounce(bdata->gpiod,
+-					button->debounce_interval * 1000);
++			if (ddata->pdata->no_hw_debounce)
++				error = -EINVAL;
++			else
++				error = gpiod_set_debounce(bdata->gpiod,
++							   button->debounce_interval * 1000);
+ 			/* use timer if gpiolib doesn't provide debounce */
+ 			if (error < 0)
+ 				bdata->software_debounce =
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index 43b5d56383e3..d03adfa794bf 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -232,6 +232,7 @@ soc_button_device_create(struct platform_device *pdev,
+ 	gpio_keys_pdata->buttons = gpio_keys;
+ 	gpio_keys_pdata->nbuttons = n_buttons;
+ 	gpio_keys_pdata->rep = autorepeat;
++	gpio_keys_pdata->no_hw_debounce = TRUE;
+ 
+ 	pd = platform_device_register_resndata(&pdev->dev, "gpio-keys",
+ 					       PLATFORM_DEVID_AUTO, NULL, 0,
+diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
+index 80fa930b04c6..c99f74467fda 100644
+--- a/include/linux/gpio_keys.h
++++ b/include/linux/gpio_keys.h
+@@ -48,6 +48,7 @@ struct gpio_keys_button {
+  * @enable:		platform hook for enabling the device
+  * @disable:		platform hook for disabling the device
+  * @name:		input device name
++ * @no_hw_debounce:	avoid programming hardware debounce
+  */
+ struct gpio_keys_platform_data {
+ 	const struct gpio_keys_button *buttons;
+@@ -57,6 +58,7 @@ struct gpio_keys_platform_data {
+ 	int (*enable)(struct device *dev);
+ 	void (*disable)(struct device *dev);
+ 	const char *name;
++	bool no_hw_debounce;
+ };
+ 
+ #endif
+-- 
+2.51.2
+

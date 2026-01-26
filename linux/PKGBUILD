@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=6.17.7
 _pkgver=6.17.7-ba22
-pkgrel=7
+pkgrel=8
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -57,6 +57,9 @@ source=(
 
   0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
 
+  0009-Input-Don-t-program-hw-debounce-for-soc_button_array.patch
+  0010-Input-Don-t-send-fake-button-presses-to-wake-system.patch
+
   0034-platform-x86-msi-wmi-platform-update-tdp-range.patch
   # A008-Add-EXTRAVERSION.patch
 )
@@ -76,6 +79,8 @@ sha256sums=('SKIP'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '8e84679e996fddb20ec3ec9f72b13389670ce30703a8be11dd0bca0981fa4b56'
             'c8868f3a69c8f419cbecd90da927f29334143cde6578e0362be3006972286177'
+            '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
+            'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
