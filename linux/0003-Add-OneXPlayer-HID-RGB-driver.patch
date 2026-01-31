@@ -1,33 +1,33 @@
-From 77fc42e260cb5cc384bfc01f5888bb5b471e3e7c Mon Sep 17 00:00:00 2001
+From ca40fcea9f48c2e53cf7ca09b3dd1c5cd345f086 Mon Sep 17 00:00:00 2001
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 Date: Mon, 20 Oct 2025 22:07:05 -0700
 Subject: [PATCH] Add OneXPlayer HID RGB driver.
 
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/hid/Kconfig       |  12 +
- drivers/hid/Makefile      |   2 +
- drivers/hid/hid-ids.h     |   6 +
- drivers/hid/hid-oxp-rgb.c | 689 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 709 insertions(+)
- create mode 100644 drivers/hid/hid-oxp-rgb.c
+ drivers/hid/Kconfig   |  12 +
+ drivers/hid/Makefile  |   2 +
+ drivers/hid/hid-ids.h |   6 +
+ drivers/hid/hid-oxp.c | 694 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 714 insertions(+)
+ create mode 100644 drivers/hid/hid-oxp.c
 
 diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index af94ac522def..4ac2f2e32d4e 100644
+index af94ac522defd..7e8c8379f95e6 100644
 --- a/drivers/hid/Kconfig
 +++ b/drivers/hid/Kconfig
 @@ -897,6 +897,18 @@ config HID_ORTEK
  	   - Ortek WKB-2000
  	   - Skycable wireless presenter
  
-+config HID_OXP_RGB
-+	tristate "OneXPlayer Handheld RGB support"
++config HID_OXP
++	tristate "OneXPlayer handheld controller configuration support"
 +	depends on USB_HID
 +	depends on LEDS_CLASS
 +	depends on LEDS_CLASS_MULTICOLOR
 +	help
-+	  Say Y here if you would like to enable RGB control support for OneXPlayer handled
-+	  devices that come with RGB LED rings around the joysticks.
++	  Say Y here if you would like to enable support for OneXPlayer handled
++	  devices that come with RGB LED rings around the joysticks and macro buttons.
 +
 +	  To compile this driver as a module, choose M here: the module will
 +	  be called hid-oxp-rgb.
@@ -36,20 +36,20 @@ index af94ac522def..4ac2f2e32d4e 100644
  	tristate "Pantherlord/GreenAsia game controller"
  	help
 diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index 5e4e311ad4f0..d4599e6f326f 100644
+index 5e4e311ad4f06..02ff5f6454309 100644
 --- a/drivers/hid/Makefile
 +++ b/drivers/hid/Makefile
 @@ -97,6 +97,8 @@ obj-$(CONFIG_HID_NTI)			+= hid-nti.o
  obj-$(CONFIG_HID_NTRIG)		+= hid-ntrig.o
  obj-$(CONFIG_HID_NVIDIA_SHIELD)	+= hid-nvidia-shield.o
  obj-$(CONFIG_HID_ORTEK)		+= hid-ortek.o
-+obj-$(CONFIG_HID_OXP_RGB)	+= hid-oxp-rgb.o
-+CFLAGS_hid-oxp-rgb.o := -DDEBUG
++obj-$(CONFIG_HID_OXP)	+= hid-oxp.o
++CFLAGS_hid-oxp.o := -DDEBUG
  obj-$(CONFIG_HID_PRODIKEYS)	+= hid-prodikeys.o
  obj-$(CONFIG_HID_PANTHERLORD)	+= hid-pl.o
  obj-$(CONFIG_HID_PENMOUNT)	+= hid-penmount.o
 diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index dccf1a321a7f..d02b701298e8 100644
+index dccf1a321a7fc..7d139a87eca33 100644
 --- a/drivers/hid/hid-ids.h
 +++ b/drivers/hid/hid-ids.h
 @@ -1084,6 +1084,12 @@
@@ -57,25 +57,25 @@ index dccf1a321a7f..d02b701298e8 100644
  #define USB_DEVICE_ID_NVIDIA_THUNDERSTRIKE_CONTROLLER	0x7214
  
 +#define USB_VENDOR_ID_CRSC			0x1A2C
-+#define USB_DEVICE_ID_ONEXPLAYER_OXFLY		0xB001
++#define USB_DEVICE_ID_ONEXPLAYER_GEN1		0xB001
 +
 +#define USB_VENDOR_ID_WCH			0x1A86
-+#define USB_DEVICE_ID_ONEXPLAYER_X1MINI		0xFE00
++#define USB_DEVICE_ID_ONEXPLAYER_GEN2		0xFE00
 +
  #define USB_VENDOR_ID_ONTRAK		0x0a07
  #define USB_DEVICE_ID_ONTRAK_ADU100	0x0064
  
-diff --git a/drivers/hid/hid-oxp-rgb.c b/drivers/hid/hid-oxp-rgb.c
+diff --git a/drivers/hid/hid-oxp.c b/drivers/hid/hid-oxp.c
 new file mode 100644
-index 000000000000..31b458c72e1c
+index 0000000000000..1f070d8fecbf5
 --- /dev/null
-+++ b/drivers/hid/hid-oxp-rgb.c
-@@ -0,0 +1,689 @@
++++ b/drivers/hid/hid-oxp.c
+@@ -0,0 +1,694 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ *  HID driver for Lenovo Legion Go series gamepad.
++ *  HID driver for OneXPlayer gamepad configuratiion devices.
 + *
-+ *  Copyright (c) 2025 Valve Corporation */
++ *  Copyright (c) 2026 Valve Corporation */
 +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
 +#include <linux/array_size.h>
@@ -99,17 +99,17 @@ index 000000000000..31b458c72e1c
 +
 +#define OXP_PACKET_SIZE 64
 +
-+#define OXFLY_MESSAGE_HEADER 0xff
-+#define OXFLY_USAGE_PAGE 0xff01
-+
-+#define X1MINI_MESSAGE_HEADER 0x3f
-+#define X1MINI_USAGE_PAGE 0xff00
++#define GEN1_MESSAGE_HEADER 0xff
++#define GEN1_USAGE_PAGE 0xff01
++#define GEN2_MESSAGE_HEADER 0x3f
++#define GEN2_USAGE_PAGE 0xff00
 +
 +enum oxp_function_index {
-+	FID_OXFLY_RGB = 0x07,
-+	FID_X1MINI_INTERCEPT = 0xb2,
-+	FID_X1MINI_INIT = 0xb2,
-+	FID_X1MINI_RGB = 0xb8,
++	OXP_FID_GEN1_RGB_SET = 0x07,
++	OXP_FID_GEN1_RGB_REPLY = 0x0f,
++	OXP_FID_GEN2_RGB_REPLY = 0xb2,
++	OXP_FID_GEN2_KEY_STATE = 0xb4,
++	OXP_FID_GEN2_RGB_SET = 0xb8,
 +};
 +
 +struct oxp_hid_cfg {
@@ -189,7 +189,7 @@ index 000000000000..31b458c72e1c
 +	[RGB_ENABLED] = "true",
 +};
 +
-+struct oxfly_command_report {
++struct command_report {
 +	u8 report_id;
 +	u8 message_id;
 +	u8 header_data[2];
@@ -210,18 +210,18 @@ index 000000000000..31b458c72e1c
 +static int oxp_hid_raw_event(struct hid_device *hdev, struct hid_report *report,
 +			     u8 *data, int size)
 +{
-+	struct oxfly_command_report *cmd_rep;
++	struct command_report *cmd_rep;
 +	struct led_classdev_mc *led_mc;
 +	u16 up = get_usage_page(hdev);
 +
 +	dev_dbg(&hdev->dev, "raw event data: [%*ph]\n", OXP_PACKET_SIZE, data);
 +
 +	switch (up) {
-+	case OXFLY_USAGE_PAGE:
++	case GEN1_USAGE_PAGE:
 +		led_mc = drvdata.led_mc;
-+		cmd_rep = (struct oxfly_command_report *)data;
++		cmd_rep = (struct command_report *)data;
 +		switch (cmd_rep->message_id) {
-+		case 0x0f:
++		case OXP_FID_GEN1_RGB_REPLY:
 +			/* Ensure we save monocolor as the list value */
 +			drvdata.rgb_effect =
 +				cmd_rep->effect == OXP_EFFECT_MONO_TRUE ?
@@ -236,9 +236,10 @@ index 000000000000..31b458c72e1c
 +				led_mc->led_cdev.max_brightness;
 +			/* If monocolor had less than 100% brightness on the previous boot,
 +			 * there will be no reliable way to determine the real intensity;
-+			 * since intensity scaling is used our brightness will always look
-+			 * like 100%. Use the last set value to prevent successive boots from
-+			 * lowering the brightness further.
++			 * since intensity scaling is used with a hardware brightness set at max,
++			 * our brightness will always look like 100%. Use the last set value to
++			 * prevent successive boots from lowering the brightness further.
++			 * Brightness will be "wrong" but the effect will remain the same visually.
 +			 */
 +			led_mc->subled_info[0].intensity = cmd_rep->red;
 +			led_mc->subled_info[1].intensity = cmd_rep->green;
@@ -248,7 +249,9 @@ index 000000000000..31b458c72e1c
 +			break;
 +		}
 +		break;
-+	case X1MINI_USAGE_PAGE:
++	case GEN2_USAGE_PAGE:
++		dev_dbg(&hdev->dev, "Got response for gen 2 query\n");
++		break;
 +	default:
 +		break;
 +	}
@@ -284,20 +287,20 @@ index 000000000000..31b458c72e1c
 +	return ret == OXP_PACKET_SIZE ? 0 : -EIO;
 +}
 +
-+static int oxfly_property_out(enum oxp_function_index fid, u8 *data,
++static int gen_1_property_out(enum oxp_function_index fid, u8 *data,
 +			      u8 data_size)
 +{
-+	u8 header[] = { fid, OXFLY_MESSAGE_HEADER };
++	u8 header[] = { fid, GEN1_MESSAGE_HEADER };
 +	size_t header_size = ARRAY_SIZE(header);
 +
 +	return mcu_property_out(header, header_size, data, data_size, 0, 0);
 +}
 +
-+static int x1mini_property_out(enum oxp_function_index fid, u8 *data,
-+			       u8 data_size)
++static int gen_2_property_out(enum oxp_function_index fid, u8 *data,
++			      u8 data_size)
 +{
-+	u8 header[] = { fid, X1MINI_MESSAGE_HEADER, 0x01 };
-+	u8 footer[] = { X1MINI_MESSAGE_HEADER, fid };
++	u8 header[] = { fid, GEN2_MESSAGE_HEADER };
++	u8 footer[] = { GEN2_MESSAGE_HEADER, fid };
 +	size_t header_size = ARRAY_SIZE(header);
 +	size_t footer_size = ARRAY_SIZE(footer);
 +
@@ -314,17 +317,17 @@ index 000000000000..31b458c72e1c
 +	 * monocolor mode.
 +	 */
 +	switch (up) {
-+	case OXFLY_USAGE_PAGE:
++	case GEN1_USAGE_PAGE:
 +		data = (u8[4]){ OXP_SET_PROPERTY, enabled, speed, brightness };
 +		if (drvdata.rgb_effect == OXP_EFFECT_MONO_LIST)
 +			data[3] = 0x04;
-+		return oxfly_property_out(FID_OXFLY_RGB, data, 4);
-+	case X1MINI_USAGE_PAGE:
++		return gen_1_property_out(OXP_FID_GEN1_RGB_SET, data, 4);
++	case GEN2_USAGE_PAGE:
 +		data = (u8[6]){ OXP_SET_PROPERTY, 0x00,	 0x02,
 +				enabled,	  speed, brightness };
 +		if (drvdata.rgb_effect == OXP_EFFECT_MONO_LIST)
 +			data[5] = 0x04;
-+		return x1mini_property_out(FID_X1MINI_RGB, data, 6);
++		return gen_2_property_out(OXP_FID_GEN2_RGB_SET, data, 6);
 +		break;
 +	default:
 +		return -ENODEV;
@@ -334,13 +337,15 @@ index 000000000000..31b458c72e1c
 +static ssize_t oxp_rgb_status_show(void)
 +{
 +	u16 up = get_usage_page(drvdata.hdev);
-+	u8 data[] = { OXP_GET_PROPERTY };
++	u8 *data;
 +
 +	switch (up) {
-+	case OXFLY_USAGE_PAGE:
-+		return oxfly_property_out(FID_OXFLY_RGB, data, 1);
-+	case X1MINI_USAGE_PAGE:
-+		return x1mini_property_out(FID_X1MINI_RGB, data, 1);
++	case GEN1_USAGE_PAGE:
++		data = (u8[1]){ OXP_GET_PROPERTY };
++		return gen_1_property_out(OXP_FID_GEN1_RGB_SET, data, 1);
++	case GEN2_USAGE_PAGE:
++		data = (u8[3]){ OXP_GET_PROPERTY, 0x00, 0x02 };
++		return gen_2_property_out(OXP_FID_GEN2_RGB_SET, data, 3);
 +		break;
 +	default:
 +		return -ENODEV;
@@ -360,7 +365,7 @@ index 000000000000..31b458c72e1c
 +	int i;
 +
 +	switch (up) {
-+	case OXFLY_USAGE_PAGE:
++	case GEN1_USAGE_PAGE:
 +		size = 55;
 +		data = (u8[55]){ OXP_EFFECT_MONO_TRUE };
 +
@@ -369,8 +374,8 @@ index 000000000000..31b458c72e1c
 +			data[3 * i + 1] = green;
 +			data[3 * i + 2] = blue;
 +		}
-+		return oxfly_property_out(FID_OXFLY_RGB, data, size);
-+	case X1MINI_USAGE_PAGE:
++		return gen_1_property_out(OXP_FID_GEN1_RGB_SET, data, size);
++	case GEN2_USAGE_PAGE:
 +		size = 57;
 +		data = (u8[57]){ OXP_EFFECT_MONO_TRUE, 0x00, 0x02 };
 +
@@ -379,7 +384,7 @@ index 000000000000..31b458c72e1c
 +			data[3 * i + 1] = green;
 +			data[3 * i + 2] = blue;
 +		}
-+		return x1mini_property_out(FID_X1MINI_RGB, data, size);
++		return gen_2_property_out(OXP_FID_GEN2_RGB_SET, data, size);
 +	default:
 +		return -ENODEV;
 +	}
@@ -412,13 +417,13 @@ index 000000000000..31b458c72e1c
 +	case OXP_EFFECT_PURPLE:
 +	case OXP_EFFECT_FOGGY:
 +		switch (up) {
-+		case OXFLY_USAGE_PAGE:
++		case GEN1_USAGE_PAGE:
 +			data = (u8[1]){ effect };
-+			ret = oxfly_property_out(FID_OXFLY_RGB, data, 1);
++			ret = gen_1_property_out(OXP_FID_GEN1_RGB_SET, data, 1);
 +			break;
-+		case X1MINI_USAGE_PAGE:
++		case GEN2_USAGE_PAGE:
 +			data = (u8[3]){ effect, 0x00, 0x02 };
-+			ret = x1mini_property_out(FID_X1MINI_RGB, data, 3);
++			ret = gen_2_property_out(OXP_FID_GEN2_RGB_SET, data, 3);
 +			break;
 +		default:
 +			ret = ENODEV;
@@ -726,8 +731,8 @@ index 000000000000..31b458c72e1c
 +	dev_dbg(&hdev->dev, "Got usage page %04x\n", up);
 +
 +	switch (up) {
-+	case OXFLY_USAGE_PAGE:
-+	case X1MINI_USAGE_PAGE:
++	case GEN1_USAGE_PAGE:
++	case GEN2_USAGE_PAGE:
 +		return oxp_rgb_probe(hdev);
 +	default:
 +		return 0;
@@ -742,24 +747,24 @@ index 000000000000..31b458c72e1c
 +}
 +
 +static const struct hid_device_id oxp_devices[] = {
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_CRSC, USB_DEVICE_ID_ONEXPLAYER_OXFLY) },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_WCH, USB_DEVICE_ID_ONEXPLAYER_X1MINI) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CRSC, USB_DEVICE_ID_ONEXPLAYER_GEN1) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_WCH, USB_DEVICE_ID_ONEXPLAYER_GEN2) },
 +	{}
 +};
 +
 +MODULE_DEVICE_TABLE(hid, oxp_devices);
-+static struct hid_driver hid_oxp_rgb = {
-+	.name = "hid-oxp-rgb",
++static struct hid_driver hid_oxp = {
++	.name = "hid-oxp",
 +	.id_table = oxp_devices,
 +	.probe = oxp_hid_probe,
 +	.remove = oxp_hid_remove,
 +	.raw_event = oxp_hid_raw_event,
 +};
-+module_hid_driver(hid_oxp_rgb);
++module_hid_driver(hid_oxp);
 +
 +MODULE_AUTHOR("Derek J. Clark");
 +MODULE_DESCRIPTION("Driver for OneXPlayer HID RGB Interfaces.");
 +MODULE_LICENSE("GPL");
 -- 
-2.51.2
+2.52.0
 
