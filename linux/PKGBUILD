@@ -52,7 +52,7 @@ source=(
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
 
-  # 0006-s5-power-v4.patch
+  0006-s5-power-v7.patch
   0007-asus-ally-hid.patch
 
   0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
@@ -77,6 +77,7 @@ sha256sums=('f9a9b8764a0916ad739ba7f1fbacc9ccca54e226ef97dfdb7f65a86ecba861d0'
             'a93750d533c660f7e6a8536998dc607884b6b69d934f125d6950a86c2a601d47'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '011c354827574ddee838099ef7f606dacda4297aca9856f7925a15e5cb88dadb'
+            'f0a56b97f91cad0de174d2bac116fd55d78d2226e0627558c0f0529c5adaeb0a'
             'f779c2b262fd6ac009b4c2e555b493541d91743283639c771797969e1421fd71'
             'c8868f3a69c8f419cbecd90da927f29334143cde6578e0362be3006972286177'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
