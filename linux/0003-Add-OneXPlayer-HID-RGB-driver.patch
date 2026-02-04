@@ -1,4 +1,4 @@
-From ca40fcea9f48c2e53cf7ca09b3dd1c5cd345f086 Mon Sep 17 00:00:00 2001
+From ceeb72b5decc0edfd1e5c3bd2480ee87003b6018 Mon Sep 17 00:00:00 2001
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 Date: Mon, 20 Oct 2025 22:07:05 -0700
 Subject: [PATCH] Add OneXPlayer HID RGB driver.
@@ -67,7 +67,7 @@ index dccf1a321a7fc..7d139a87eca33 100644
  
 diff --git a/drivers/hid/hid-oxp.c b/drivers/hid/hid-oxp.c
 new file mode 100644
-index 0000000000000..1f070d8fecbf5
+index 0000000000000..c15f936401a9f
 --- /dev/null
 +++ b/drivers/hid/hid-oxp.c
 @@ -0,0 +1,694 @@
@@ -107,7 +107,7 @@ index 0000000000000..1f070d8fecbf5
 +enum oxp_function_index {
 +	OXP_FID_GEN1_RGB_SET = 0x07,
 +	OXP_FID_GEN1_RGB_REPLY = 0x0f,
-+	OXP_FID_GEN2_RGB_REPLY = 0xb2,
++	OXP_FID_GEN2_TOGGLE_MODE = 0xb2,
 +	OXP_FID_GEN2_KEY_STATE = 0xb4,
 +	OXP_FID_GEN2_RGB_SET = 0xb8,
 +};
@@ -299,7 +299,7 @@ index 0000000000000..1f070d8fecbf5
 +static int gen_2_property_out(enum oxp_function_index fid, u8 *data,
 +			      u8 data_size)
 +{
-+	u8 header[] = { fid, GEN2_MESSAGE_HEADER };
++	u8 header[] = { fid, GEN2_MESSAGE_HEADER, 0x00 };
 +	u8 footer[] = { GEN2_MESSAGE_HEADER, fid };
 +	size_t header_size = ARRAY_SIZE(header);
 +	size_t footer_size = ARRAY_SIZE(footer);
