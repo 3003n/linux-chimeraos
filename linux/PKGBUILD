@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=6.17.7
 _pkgver=6.17.7-ba22
-pkgrel=11
+pkgrel=12
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -60,6 +60,8 @@ source=(
   0009-Input-Don-t-program-hw-debounce-for-soc_button_array.patch
   0010-Input-Don-t-send-fake-button-presses-to-wake-system.patch
 
+  0011-hid_add_legion_go_and_go_s_drivers_v4.patch
+
   0034-platform-x86-msi-wmi-platform-update-tdp-range.patch
 )
 
@@ -73,7 +75,7 @@ validpgpkeys=(
 sha256sums=('f9a9b8764a0916ad739ba7f1fbacc9ccca54e226ef97dfdb7f65a86ecba861d0'
             '0ffa75682353e604dd59e7bafc0d88c46caa221631f6b7783a78b0abe9077c16'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
-            '2b98497359c40d9816c8125a41c6dea1d3a9e79c05dbd683d4fb85e58270844b'
+            'ff06f64c98c05c0354a6b22ee0f6e81a77762f57347fa56f7868b788f99f5f12'
             'a93750d533c660f7e6a8536998dc607884b6b69d934f125d6950a86c2a601d47'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '011c354827574ddee838099ef7f606dacda4297aca9856f7925a15e5cb88dadb'
@@ -82,6 +84,7 @@ sha256sums=('f9a9b8764a0916ad739ba7f1fbacc9ccca54e226ef97dfdb7f65a86ecba861d0'
             'c8868f3a69c8f419cbecd90da927f29334143cde6578e0362be3006972286177'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
+            '266a9b0af44fe5a9d904194019f5696060e89a73e1f9150592171ffae3b1bcde'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
