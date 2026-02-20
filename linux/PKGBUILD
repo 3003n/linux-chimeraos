@@ -197,6 +197,8 @@ prepare() {
 
 build() {
   cd $_srcname
+  # Workaround GCC 15 C23 const-correctness in tools/bpf libbpf
+  sed -i 's/-Werror/-Werror -Wno-error=discarded-qualifiers/' tools/lib/bpf/Makefile
   _make all
 }
 
