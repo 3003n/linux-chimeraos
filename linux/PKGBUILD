@@ -3,9 +3,9 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=6.17.7
-_pkgver=6.17.7-ba22
-pkgrel=12
+pkgver=6.19.0
+_pkgver=6.19-rc8-ca1
+pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -37,7 +37,7 @@ options=('!strip')
 # _srcname=linux-$_pkgver
 _srcname=patchwork-$_pkgver
 source=(
-  "https://github.com/bazzite-org/patchwork/archive/refs/tags/$_pkgver.tar.gz"
+  "https://github.com/hhd-dev/patchwork/archive/refs/tags/$_pkgver.tar.gz"
   # "https://github.com/3003n/linux/archive/refs/tags/$_pkgver.tar.gz"
   config  # the main kernel config file
   # config-chimera # our config that will be merged
@@ -47,15 +47,15 @@ source=(
   # R0001-Revert-drm-amd-display-enable-tf_blend-if-supported-.patch
   # R0002-Revert-drm-re-allow-no-op-changes-on-non-primary-pla.patch
 
-  "0001-cjktty-6.16.patch::https://github.com/bigshans/cjktty-patches/raw/master/v6.x/cjktty-6.16.patch"
+  "0001-cjktty-6.19.patch::https://github.com/bigshans/cjktty-patches/raw/master/v6.x/cjktty-6.19.patch"
   "0002-cjktty-32.patch::https://github.com/bigshans/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
 
-  0006-s5-power-v7.patch
+  # 0006-s5-power-v7.patch
   0007-asus-ally-hid.patch
 
-  0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
+  # 0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
 
   0009-Input-Don-t-program-hw-debounce-for-soc_button_array.patch
   0010-Input-Don-t-send-fake-button-presses-to-wake-system.patch
@@ -72,16 +72,14 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('f9a9b8764a0916ad739ba7f1fbacc9ccca54e226ef97dfdb7f65a86ecba861d0'
-            '0ffa75682353e604dd59e7bafc0d88c46caa221631f6b7783a78b0abe9077c16'
+sha256sums=('2ca7ddeacbd38fd8f76ce2c2f48be4151e0de40ba2b87901561e4505cf63371b'
+            'e1c52951e4d9c8da913d43488c9577f98e40ae480f894bfb9d6ebc09718d1588'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             'ff06f64c98c05c0354a6b22ee0f6e81a77762f57347fa56f7868b788f99f5f12'
-            'a93750d533c660f7e6a8536998dc607884b6b69d934f125d6950a86c2a601d47'
+            '8e25a53bef9af907cd2a180cee1312efd8441cbb9714c05cc99f416def879536'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '011c354827574ddee838099ef7f606dacda4297aca9856f7925a15e5cb88dadb'
-            'f0a56b97f91cad0de174d2bac116fd55d78d2226e0627558c0f0529c5adaeb0a'
             'f779c2b262fd6ac009b4c2e555b493541d91743283639c771797969e1421fd71'
-            'c8868f3a69c8f419cbecd90da927f29334143cde6578e0362be3006972286177'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
             '266a9b0af44fe5a9d904194019f5696060e89a73e1f9150592171ffae3b1bcde'
@@ -123,59 +121,59 @@ prepare() {
     patch -Np1 < "../$src"
   done
 
-  # Fetch custom drivers automatically
-  echo "Fetching custom driver submodules..."
-  local tmpdir=$(mktemp -d)
+  # # Fetch custom drivers automatically
+  # echo "Fetching custom driver submodules..."
+  # local tmpdir=$(mktemp -d)
   
-  # Shallow clone to get submodule info
-  git clone --depth=1 --branch $_pkgver --filter=blob:none \
-    https://github.com/bazzite-org/patchwork.git "$tmpdir/patchwork" || {
-    echo "Warning: failed to clone patchwork, cleaning drivers/custom"
-    find drivers/custom -type d -empty -delete
-    echo "" > drivers/custom/Makefile
-    echo "" > drivers/custom/Kconfig
-    rm -rf "$tmpdir"
-    return
-  }
+  # # Shallow clone to get submodule info
+  # git clone --depth=1 --branch $_pkgver --filter=blob:none \
+  #   https://github.com/bazzite-org/patchwork.git "$tmpdir/patchwork" || {
+  #   echo "Warning: failed to clone patchwork, cleaning drivers/custom"
+  #   find drivers/custom -type d -empty -delete
+  #   echo "" > drivers/custom/Makefile
+  #   echo "" > drivers/custom/Kconfig
+  #   rm -rf "$tmpdir"
+  #   return
+  # }
   
-  cd "$tmpdir/patchwork"
+  # cd "$tmpdir/patchwork"
   
-  # Get submodule info and download each one
-  git submodule init drivers/custom
-  git submodule status drivers/custom/* 2>/dev/null | while read -r status_line; do
-    commit=$(echo "$status_line" | awk '{print $1}' | sed 's/^[-+]//')
-    path=$(echo "$status_line" | awk '{print $2}')
-    name=$(basename "$path")
-    url=$(git config --file .gitmodules --get "submodule.$path.url")
+  # # Get submodule info and download each one
+  # git submodule init drivers/custom
+  # git submodule status drivers/custom/* 2>/dev/null | while read -r status_line; do
+  #   commit=$(echo "$status_line" | awk '{print $1}' | sed 's/^[-+]//')
+  #   path=$(echo "$status_line" | awk '{print $2}')
+  #   name=$(basename "$path")
+  #   url=$(git config --file .gitmodules --get "submodule.$path.url")
     
-    if [ -n "$commit" ] && [ -n "$url" ]; then
-      echo "  -> Downloading $name at ${commit:0:8}..."
-      mkdir -p "$srcdir/$_srcname/$path"
+  #   if [ -n "$commit" ] && [ -n "$url" ]; then
+  #     echo "  -> Downloading $name at ${commit:0:8}..."
+  #     mkdir -p "$srcdir/$_srcname/$path"
       
-      # Try archive download first
-      if ! curl -sfL "$url/archive/$commit.tar.gz" | \
-        tar -xz -C "$srcdir/$_srcname/$path" --strip-components=1 2>/dev/null; then
+  #     # Try archive download first
+  #     if ! curl -sfL "$url/archive/$commit.tar.gz" | \
+  #       tar -xz -C "$srcdir/$_srcname/$path" --strip-components=1 2>/dev/null; then
         
-        # Fallback to shallow git clone
-        echo "     -> Using git clone fallback..."
-        local clone_tmp="$tmpdir/${name}_clone"
-        if git clone --depth=50 "$url" "$clone_tmp" 2>/dev/null; then
-          (cd "$clone_tmp" && git checkout $commit 2>/dev/null && rm -rf .git) && \
-            cp -r "$clone_tmp"/* "$srcdir/$_srcname/$path/" 2>/dev/null || \
-            echo "     Warning: failed to checkout $name"
-          rm -rf "$clone_tmp"
-        else
-          echo "     Warning: failed to download $name"
-        fi
-      fi
-    fi
-  done
+  #       # Fallback to shallow git clone
+  #       echo "     -> Using git clone fallback..."
+  #       local clone_tmp="$tmpdir/${name}_clone"
+  #       if git clone --depth=50 "$url" "$clone_tmp" 2>/dev/null; then
+  #         (cd "$clone_tmp" && git checkout $commit 2>/dev/null && rm -rf .git) && \
+  #           cp -r "$clone_tmp"/* "$srcdir/$_srcname/$path/" 2>/dev/null || \
+  #           echo "     Warning: failed to checkout $name"
+  #         rm -rf "$clone_tmp"
+  #       else
+  #         echo "     Warning: failed to download $name"
+  #       fi
+  #     fi
+  #   fi
+  # done
   
-  cd "$srcdir/$_srcname"
-  rm -rf "$tmpdir"
+  # cd "$srcdir/$_srcname"
+  # rm -rf "$tmpdir"
   
-  # Clean up any empty directories
-  find drivers/custom -type d -empty -delete
+  # # Clean up any empty directories
+  # find drivers/custom -type d -empty -delete
 
   echo "Setting version..."
   echo "${pkgbase#linux}" > localversion.10-pkgname
