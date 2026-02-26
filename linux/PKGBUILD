@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=6.19.0
 _pkgver=6.19-rc8-ca1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -62,6 +62,8 @@ source=(
 
   0011-hid_add_legion_go_and_go_s_drivers_v4.patch
 
+  0012_iommu_fix.patch
+
   0034-platform-x86-msi-wmi-platform-update-tdp-range.patch
 )
 
@@ -83,6 +85,7 @@ sha256sums=('2ca7ddeacbd38fd8f76ce2c2f48be4151e0de40ba2b87901561e4505cf63371b'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
             '266a9b0af44fe5a9d904194019f5696060e89a73e1f9150592171ffae3b1bcde'
+            'c380d5b7194ab960de17cd7d2940228b9880c14b03988f56fd7861ef592e6723'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
