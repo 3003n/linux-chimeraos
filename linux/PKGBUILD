@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=6.19.0
 _pkgver=6.19-rc8-ca1
-pkgrel=3
+pkgrel=4
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -64,6 +64,9 @@ source=(
 
   0012-iommu-Skip-mapping-at-address-0x0-if-it-already-exis.patch
 
+  0021-asus-ally-hid-disable-wakeup-attribute-on-N-Key-devi.patch
+  0022-asus-ally-hid-grab-short-press-QAM-on-ROG-Xbox-Ally-.patch
+
   0034-platform-x86-msi-wmi-platform-update-tdp-range.patch
 )
 
@@ -86,6 +89,8 @@ sha256sums=('2ca7ddeacbd38fd8f76ce2c2f48be4151e0de40ba2b87901561e4505cf63371b'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
             '266a9b0af44fe5a9d904194019f5696060e89a73e1f9150592171ffae3b1bcde'
             '16ab64f6b752785f1c3eb5bb67f4975464acaeb30602f25a9c97344b17571897'
+            'b82ea99afb7ace8a00a62b0b04f74a25cafb8225d27d4af02e1497b79c31babb'
+            '33ac17b298984e3189abc12d4e64086373fd8965fd3883794acbaa749ee63aa3'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
