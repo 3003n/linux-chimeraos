@@ -1,0 +1,57 @@
+From d730ba758a042949212dc68c41186b4d2a3a5d23 Mon Sep 17 00:00:00 2001
+From: honjow <honjow311@gmail.com>
+Date: Sat, 28 Feb 2026 12:06:21 +0800
+Subject: [PATCH 1/2] asus-ally-hid: disable wakeup attribute on N-Key device
+
+With the current ROG Ally patchset, the MCU will send spurious events
+when the ROG Ally is in s2idle while plugged in, which can cause the
+system to wake unexpectedly.
+
+There's really no reason the N-Key needs wakeup enabled, so just
+disable the capability for now. This can be dropped when the issue is
+root caused and fixed within the standard ROG Ally patchset.
+
+Closes: https://github.com/ValveSoftware/SteamOS/issues/2119
+---
+ drivers/hid/asus-ally-hid/asus-ally-hid-core.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
+index 1e8f98b69332c..f828656644998 100644
+--- a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
++++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
+@@ -406,6 +406,23 @@ static int ally_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	return 0;
+ }
+ 
++static void ally_disable_nkey_wakeup(struct hid_device *hdev)
++{
++	struct usb_interface *intf = to_usb_interface(hdev->dev.parent);
++	struct usb_device *udev;
++
++	if (!intf)
++		return;
++
++	udev = interface_to_usbdev(intf);
++	if (!udev)
++		return;
++
++	/* HACK: Mark Ally N-Key as incapable of wakeup */
++	device_set_wakeup_enable(&udev->dev, false);
++	hid_info(hdev, "Disabled wakeup capability on %s\n", dev_name(&udev->dev));
++}
++
+ static int ally_hid_probe(struct hid_device *hdev, const struct hid_device_id *_id)
+ {
+ 	int ret, ep;
+@@ -458,6 +475,7 @@ static int ally_hid_probe(struct hid_device *hdev, const struct hid_device_id *_
+ 		goto err_close;
+ 
+ 	if (ep == HID_ALLY_INTF_CFG_IN) {
++		ally_disable_nkey_wakeup(hdev);
+ 		ret = ally_config_create(hdev, &ally_drvdata);
+ 		if (ret < 0)
+ 			hid_err(hdev, "Failed to create Ally configuration interface.\n");
+-- 
+2.51.2
+
