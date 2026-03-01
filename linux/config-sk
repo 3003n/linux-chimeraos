@@ -1,4 +1,101 @@
-# sk-Chimera specific config flags
+
+# Enable NTSync module
+CONFIG_NTSYNC=y
+
+# Disable nouveau module
+CONFIG_DRM_NOUVEAU=n
+
+# Disable radeon module
+CONFIG_DRM_RADEON=n
+
+# PARAVIRT options have overhead, even on bare metal boots. They can cause
+# spinlocks to not be inlined as well. Either way, we don't intend to run this
+# kernel as a guest, so this also clears out a whole bunch of
+# virtualization-specific drivers.
+CONFIG_HYPERVISOR_GUEST=n
+
+# As running as a guest is not allowed disable guest drivers too
+CONFIG_VIRT_DRIVERS=n
+CONFIG_DRM_QXL=n
+
+# Disable xen virtualization
+CONFIG_XEN_PCIDEV_BACKEND=n
+CONFIG_XEN_ACPI_PROCESSOR=n
+CONFIG_XEN_MCE_LOG=n
+CONFIG_XEN_PVHVM_GUEST=n
+CONFIG_XEN_PVHVM_SMP=n
+CONFIG_XEN_PVHVM=n
+CONFIG_XEN_PVH=n
+
+# AGP GPUs are not supported
+CONFIG_AGP=n
+
+# Old unsupported GPU
+CONFIG_DRM_MGAG200=n
+
+# There is no use for SELinux as it requires a full userspace rebuild
+CONFIG_SECURITY_SELINUX=n
+
+# SkorionOS is a gaming-oriented distro and chemical sensors are not a good fit
+CONFIG_AOSONG_AGS02MA=n
+CONFIG_ATLAS_PH_SENSOR=n
+CONFIG_ATLAS_EZO_SENSOR=n
+CONFIG_BME680=n
+CONFIG_BME680_I2C=n
+CONFIG_BME680_SPI=n
+CONFIG_CCS811=n
+CONFIG_IAQCORE=n
+CONFIG_PMS7003=n
+CONFIG_SCD30_CORE=n
+CONFIG_SCD30_I2C=n
+CONFIG_SCD30_SERIAL=n
+CONFIG_SCD4X=n
+CONFIG_SENSIRION_SGP30=n
+CONFIG_SENSIRION_SGP40=n
+CONFIG_SPS30=n
+CONFIG_SPS30_I2C=n
+CONFIG_SPS30_SERIAL=n
+CONFIG_SENSEAIR_SUNRISE_CO2=n
+CONFIG_VZ89X=n
+
+# SkorionOS is a gaming-oriented distro and pressure sensors are not a good fit
+CONFIG_ABP060MG=n
+CONFIG_ROHM_BM1390=n
+CONFIG_BMP280=n
+CONFIG_BMP280_I2C=n
+CONFIG_BMP280_SPI=n
+CONFIG_IIO_CROS_EC_BARO=n
+CONFIG_DLHL60D=n
+CONFIG_DPS310=n
+CONFIG_HID_SENSOR_PRESS=n
+CONFIG_HP03=n
+CONFIG_HSC030PA=n
+CONFIG_HSC030PA_I2C=n
+CONFIG_HSC030PA_SPI=n
+CONFIG_ICP10100=n
+CONFIG_MPL115=n
+CONFIG_MPL115_I2C=n
+CONFIG_MPL115_SPI=n
+CONFIG_MPL3115=n
+CONFIG_MPRLS0025PA=n
+CONFIG_MPRLS0025PA_I2C=n
+CONFIG_MPRLS0025PA_SPI=n
+CONFIG_MS5611=n
+CONFIG_MS5611_I2C=n
+CONFIG_MS5611_SPI=n
+CONFIG_MS5637=n
+CONFIG_IIO_ST_PRESS=n
+CONFIG_IIO_ST_PRESS_I2C=n
+CONFIG_IIO_ST_PRESS_SPI=n
+CONFIG_T5403=n
+CONFIG_HP206C=n
+CONFIG_ZPA2326=n
+CONFIG_ZPA2326_I2C=n
+CONFIG_ZPA2326_SPI=n
+
+
+##############################
+# SkorionOS specific config flags
 
 # Android
 CONFIG_ASHMEM=y
@@ -13,8 +110,7 @@ CONFIG_ANDROID_BINDER_IPC_SELFTEST=n
 CONFIG_FONT_CJK_16x16=y
 CONFIG_FONT_CJK_32x32=y
 
-# bazzite kernel config
-# CONFIG_AMD_PRIVATE_COLOR=y
+CONFIG_AMD_PRIVATE_COLOR=y
 
 #
 CONFIG_MODVERSIONS=y
@@ -22,7 +118,9 @@ CONFIG_MODVERSIONS=y
 # asus-ally-hid
 CONFIG_ASUS_ALLY_HID=m
 
+# OneXPlayer HID RGB driver
 CONFIG_HID_OXP=m
 
+# Lenovo GO and GO S drivers
 CONFIG_HID_LENOVO_GO=m
 CONFIG_HID_LENOVO_GO_S=m
