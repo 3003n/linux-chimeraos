@@ -3,9 +3,9 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=6.19.0
-_pkgver=6.19-rc8-ca1
-pkgrel=4
+pkgver=7.0.0
+_pkgver=7.0.0-rc2-sk1
+pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -34,11 +34,11 @@ makedepends=(
 )
 options=('!strip')
 # _srcname=linux-skorionos
-# _srcname=linux-$_pkgver
-_srcname=patchwork-$_pkgver
+_srcname=linux-$_pkgver
+# _srcname=patchwork-$_pkgver
 source=(
-  "https://github.com/hhd-dev/patchwork/archive/refs/tags/$_pkgver.tar.gz"
-  # "https://github.com/3003n/linux/archive/refs/tags/$_pkgver.tar.gz"
+  # "https://github.com/hhd-dev/patchwork/archive/refs/tags/$_pkgver.tar.gz"
+  "https://github.com/3003n/linux/archive/refs/tags/v$_pkgver.tar.gz"
   config  # the main kernel config file
   # config-chimera # our config that will be merged
   config-bazzite
@@ -47,7 +47,8 @@ source=(
   # R0001-Revert-drm-amd-display-enable-tf_blend-if-supported-.patch
   # R0002-Revert-drm-re-allow-no-op-changes-on-non-primary-pla.patch
 
-  "0001-cjktty-6.19.patch::https://github.com/bigshans/cjktty-patches/raw/master/v6.x/cjktty-6.19.patch"
+  # "0001-cjktty-6.19.patch::https://github.com/bigshans/cjktty-patches/raw/master/v6.x/cjktty-6.19.patch"
+  0001-cjktty-7.0.patch
   "0002-cjktty-32.patch::https://github.com/bigshans/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
@@ -62,7 +63,7 @@ source=(
 
   0011-hid_add_legion_go_and_go_s_drivers_v4.patch
 
-  0012-iommu-Skip-mapping-at-address-0x0-if-it-already-exis.patch
+  # 0012-iommu-Skip-mapping-at-address-0x0-if-it-already-exis.patch
 
   0021-asus-ally-hid-disable-wakeup-attribute-on-N-Key-devi.patch
   0022-asus-ally-hid-grab-short-press-QAM-on-ROG-Xbox-Ally-.patch
@@ -77,18 +78,17 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('2ca7ddeacbd38fd8f76ce2c2f48be4151e0de40ba2b87901561e4505cf63371b'
-            'e1c52951e4d9c8da913d43488c9577f98e40ae480f894bfb9d6ebc09718d1588'
+sha256sums=('750869b5d6ad5d1dbb171f63e73a1d6f5d2eb049b723b4eafde3689fd2af7951'
+            '21ac2b1c08aac9fc4f980bbee8f1aba9c177d7f374a1f8a787b71f3488ac844b'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             'ff06f64c98c05c0354a6b22ee0f6e81a77762f57347fa56f7868b788f99f5f12'
-            '8e25a53bef9af907cd2a180cee1312efd8441cbb9714c05cc99f416def879536'
+            '6702afa07914d465dc6d65c24c7030c4ce4631bcbdfafbea8e6e6afd5b290342'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '011c354827574ddee838099ef7f606dacda4297aca9856f7925a15e5cb88dadb'
-            'f779c2b262fd6ac009b4c2e555b493541d91743283639c771797969e1421fd71'
+            'e9478a11cef930081d35de82f24946b12c01c6efe8e3cbe0034f0d517d190dd5'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
             '266a9b0af44fe5a9d904194019f5696060e89a73e1f9150592171ffae3b1bcde'
-            '16ab64f6b752785f1c3eb5bb67f4975464acaeb30602f25a9c97344b17571897'
             'b82ea99afb7ace8a00a62b0b04f74a25cafb8225d27d4af02e1497b79c31babb'
             '33ac17b298984e3189abc12d4e64086373fd8965fd3883794acbaa749ee63aa3'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')

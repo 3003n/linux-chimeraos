@@ -1,4 +1,4 @@
-From d0df953e5ef82897ec4f3e605e9e6323e61ece20 Mon Sep 17 00:00:00 2001
+From 0a8a266b9424a15a40d3dea8a07a657f1ac214f3 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Wed, 26 Mar 2025 22:54:20 +1300
 Subject: [PATCH 01/16] asus-ally-hid: add new driver for ASUS Ally handhelds
@@ -15,18 +15,18 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  drivers/hid/asus-ally-hid/Makefile            |   5 +
  .../hid/asus-ally-hid/asus-ally-hid-core.c    | 373 ++++++++++++++++++
  drivers/hid/asus-ally-hid/asus-ally.h         |  70 ++++
- drivers/hid/hid-asus.c                        |  11 +
- 7 files changed, 471 insertions(+)
+ drivers/hid/hid-asus.c                        |   5 +
+ 7 files changed, 465 insertions(+)
  create mode 100644 drivers/hid/asus-ally-hid/Kconfig
  create mode 100644 drivers/hid/asus-ally-hid/Makefile
  create mode 100644 drivers/hid/asus-ally-hid/asus-ally-hid-core.c
  create mode 100644 drivers/hid/asus-ally-hid/asus-ally.h
 
 diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index cae3932dfd2b..6a8768044963 100644
+index c1d9f7c6a5f23..34ea0fd7481e1 100644
 --- a/drivers/hid/Kconfig
 +++ b/drivers/hid/Kconfig
-@@ -1397,6 +1397,8 @@ source "drivers/hid/intel-ish-hid/Kconfig"
+@@ -1445,6 +1445,8 @@ source "drivers/hid/intel-ish-hid/Kconfig"
  
  source "drivers/hid/amd-sfh-hid/Kconfig"
  
@@ -36,10 +36,10 @@ index cae3932dfd2b..6a8768044963 100644
  
  source "drivers/hid/intel-thc-hid/Kconfig"
 diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index a3c9274c0bef..2d326a5013b4 100644
+index e01838239ae64..8fc496105a1bc 100644
 --- a/drivers/hid/Makefile
 +++ b/drivers/hid/Makefile
-@@ -170,6 +170,8 @@ obj-$(CONFIG_INTEL_ISH_HID)	+= intel-ish-hid/
+@@ -174,6 +174,8 @@ obj-$(CONFIG_INTEL_ISH_HID)	+= intel-ish-hid/
  
  obj-$(CONFIG_AMD_SFH_HID)       += amd-sfh-hid/
  
@@ -50,7 +50,7 @@ index a3c9274c0bef..2d326a5013b4 100644
  obj-$(CONFIG_INTEL_THC_HID)     += intel-thc-hid/
 diff --git a/drivers/hid/asus-ally-hid/Kconfig b/drivers/hid/asus-ally-hid/Kconfig
 new file mode 100644
-index 000000000000..f83dda32be62
+index 0000000000000..f83dda32be624
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/Kconfig
 @@ -0,0 +1,8 @@
@@ -64,7 +64,7 @@ index 000000000000..f83dda32be62
 +	Support for configuring the Asus ROG Ally gamepad using attributes.
 diff --git a/drivers/hid/asus-ally-hid/Makefile b/drivers/hid/asus-ally-hid/Makefile
 new file mode 100644
-index 000000000000..f81a9dd8fe78
+index 0000000000000..f81a9dd8fe78b
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/Makefile
 @@ -0,0 +1,5 @@
@@ -75,7 +75,7 @@ index 000000000000..f81a9dd8fe78
 +obj-$(CONFIG_ASUS_ALLY_HID)	+= asus-ally-hid-core.o
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 new file mode 100644
-index 000000000000..a529f21232fb
+index 0000000000000..a529f21232fbc
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 @@ -0,0 +1,373 @@
@@ -454,7 +454,7 @@ index 000000000000..a529f21232fb
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
 new file mode 100644
-index 000000000000..e14f8f31149e
+index 0000000000000..e14f8f31149eb
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -0,0 +1,70 @@
@@ -529,32 +529,32 @@ index 000000000000..e14f8f31149e
 +
 +#endif /* __ASUS_ALLY_H */
 diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 58213a47f827..20e2832fa3df 100644
+index d1eb733c0c47b..c1460b5e85826 100644
 --- a/drivers/hid/hid-asus.c
 +++ b/drivers/hid/hid-asus.c
-@@ -1431,6 +1431,17 @@ static const struct hid_device_id asus_devices[] = {
+@@ -1481,12 +1481,17 @@ static const struct hid_device_id asus_devices[] = {
  	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
  	    USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
- 	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
+ 	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
 +
 +	/* asus-ally-hid driver takes over */
 +	#if !IS_REACHABLE(CONFIG_ASUS_ALLY_HID)
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-+	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
-+	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-+	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
-+	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+ 	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
+ 	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_ALLY_XPAD},
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+ 	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
+ 	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_ALLY_XPAD },
 +	#endif /* !IS_REACHABLE(CONFIG_ASUS_ALLY_HID) */
 +
  	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
  	    USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
  	  QUIRK_ROG_CLAYMORE_II_KEYBOARD },
 -- 
-2.49.0
+2.51.2
 
 
-From e058f0eeb277bddd62a81a0760c90fcaa3b6124d Mon Sep 17 00:00:00 2001
+From 6a49b59941e550466832ec3ed86ff74c8ab925d3 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Mon, 24 Mar 2025 23:14:57 +1300
 Subject: [PATCH 02/16] asus-ally-hid: Add joystick LED ring support
@@ -575,7 +575,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  create mode 100644 drivers/hid/asus-ally-hid/asus-ally-rgb.c
 
 diff --git a/drivers/hid/asus-ally-hid/Makefile b/drivers/hid/asus-ally-hid/Makefile
-index f81a9dd8fe78..75d257350670 100644
+index f81a9dd8fe78b..75d2573506705 100644
 --- a/drivers/hid/asus-ally-hid/Makefile
 +++ b/drivers/hid/asus-ally-hid/Makefile
 @@ -2,4 +2,5 @@
@@ -586,7 +586,7 @@ index f81a9dd8fe78..75d257350670 100644
 +asus-ally-hid-y := asus-ally-hid-core.o asus-ally-rgb.o
 +obj-$(CONFIG_ASUS_ALLY_HID) := asus-ally-hid.o
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
-index a529f21232fb..9437bd25f67e 100644
+index a529f21232fbc..9437bd25f67ee 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 @@ -26,6 +26,7 @@ static const struct hid_device_id rog_ally_devices[] = {
@@ -662,7 +662,7 @@ index a529f21232fb..9437bd25f67e 100644
  MODULE_DEVICE_TABLE(hid, rog_ally_devices);
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-rgb.c b/drivers/hid/asus-ally-hid/asus-ally-rgb.c
 new file mode 100644
-index 000000000000..22aec39a7634
+index 0000000000000..22aec39a7634c
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/asus-ally-rgb.c
 @@ -0,0 +1,356 @@
@@ -1023,7 +1023,7 @@ index 000000000000..22aec39a7634
 +	hid_info(hdev, "Removed Ally RGB interface");
 +}
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index e14f8f31149e..e6678003755f 100644
+index e14f8f31149eb..e6678003755f3 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -9,13 +9,16 @@
@@ -1090,10 +1090,10 @@ index e14f8f31149e..e6678003755f 100644
 +
  #endif /* __ASUS_ALLY_H */
 -- 
-2.49.0
+2.51.2
 
 
-From 06cb1a5289cc18eb434fe572c6bee6d5cbae1680 Mon Sep 17 00:00:00 2001
+From 50d7db7bc85ce8d93364004547c430becaef8e5c Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Tue, 25 Mar 2025 15:20:06 +1300
 Subject: [PATCH 03/16] asus-ally-hid: initial Ally-X gamepad bringup
@@ -1113,7 +1113,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  create mode 100644 drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 
 diff --git a/drivers/hid/asus-ally-hid/Makefile b/drivers/hid/asus-ally-hid/Makefile
-index 75d257350670..296d6fa2544b 100644
+index 75d2573506705..296d6fa2544be 100644
 --- a/drivers/hid/asus-ally-hid/Makefile
 +++ b/drivers/hid/asus-ally-hid/Makefile
 @@ -2,5 +2,5 @@
@@ -1124,7 +1124,7 @@ index 75d257350670..296d6fa2544b 100644
 +asus-ally-hid-y := asus-ally-hid-core.o asus-ally-rgb.o asus-ally-hid-input.o
  obj-$(CONFIG_ASUS_ALLY_HID) := asus-ally-hid.o
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
-index 9437bd25f67e..c9674a63195c 100644
+index 9437bd25f67ee..c9674a63195ce 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 @@ -27,6 +27,7 @@ static DEFINE_MUTEX(ally_data_mutex);
@@ -1207,7 +1207,7 @@ index 9437bd25f67e..c9674a63195c 100644
  		.driver = {
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 new file mode 100644
-index 000000000000..90bcf137d9b7
+index 0000000000000..90bcf137d9b71
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 @@ -0,0 +1,171 @@
@@ -1383,7 +1383,7 @@ index 000000000000..90bcf137d9b7
 +	ally->ally_x_input = NULL;
 +}
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index e6678003755f..448f994cc9ee 100644
+index e6678003755f3..448f994cc9eec 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -22,6 +22,7 @@
@@ -1425,10 +1425,10 @@ index e6678003755f..448f994cc9ee 100644
 +
  #endif /* __ASUS_ALLY_H */
 -- 
-2.49.0
+2.51.2
 
 
-From 2cb9bb1efc65cef5b52dbd352fc80c77f5acefca Mon Sep 17 00:00:00 2001
+From 67eb836903b1d26682fede7bfe25dc844b68c1c0 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Tue, 25 Mar 2025 21:09:54 +1300
 Subject: [PATCH 04/16] asus-ally-hid: add QAM steam action + attribute to
@@ -1445,7 +1445,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 129 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
-index 90bcf137d9b7..54a33f5acc45 100644
+index 90bcf137d9b71..54a33f5acc454 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 @@ -5,6 +5,7 @@
@@ -1616,7 +1616,7 @@ index 90bcf137d9b7..54a33f5acc45 100644
 +	}
  }
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index 448f994cc9ee..cd74bc65234b 100644
+index 448f994cc9eec..cd74bc65234b7 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -74,6 +74,15 @@ struct ally_rgb_dev {
@@ -1645,10 +1645,10 @@ index 448f994cc9ee..cd74bc65234b 100644
 +
  #endif /* __ASUS_ALLY_H */
 -- 
-2.49.0
+2.51.2
 
 
-From 694d007e1f4baa8b66d546dd03993daef9016173 Mon Sep 17 00:00:00 2001
+From a9977c6135f750836599133fdfda3e24dff2b598 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Tue, 25 Mar 2025 21:36:36 +1300
 Subject: [PATCH 05/16] asus-ally-hid: add force feedback to Ally X gamepad
@@ -1662,7 +1662,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 78 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
-index 54a33f5acc45..8c1b5f4295a4 100644
+index 54a33f5acc454..8c1b5f4295a4b 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 @@ -28,13 +28,29 @@ static const int hat_values[][2] = {
@@ -1772,7 +1772,7 @@ index 54a33f5acc45..8c1b5f4295a4 100644
  		ret = -ENODEV;
  		goto unregister_input;
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index cd74bc65234b..94fcdd2ae727 100644
+index cd74bc65234b7..94fcdd2ae727c 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -71,7 +71,25 @@ struct ally_rgb_dev {
@@ -1812,10 +1812,10 @@ index cd74bc65234b..94fcdd2ae727 100644
  
  struct ally_handheld {
 -- 
-2.49.0
+2.51.2
 
 
-From bd9941556dff837b08cdb80b3a6b40250dc69715 Mon Sep 17 00:00:00 2001
+From 3c1b246d21ab016eb33574283e4a52cdf4aab352 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Wed, 26 Mar 2025 16:40:51 +1300
 Subject: [PATCH 06/16] asus-ally-hid: handle screenside QAM buttons
@@ -1834,7 +1834,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  3 files changed, 144 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
-index c9674a63195c..29a5302b5787 100644
+index c9674a63195ce..29a5302b57878 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 @@ -6,6 +6,8 @@
@@ -2021,7 +2021,7 @@ index c9674a63195c..29a5302b5787 100644
  			hid_info(hdev, "Created Ally RGB LED controls.\n");
  	}
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
-index 8c1b5f4295a4..4fc848d67c23 100644
+index 8c1b5f4295a4b..4fc848d67c237 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-input.c
 @@ -139,19 +139,23 @@ bool ally_x_raw_event(struct ally_x_input *ally_x, struct hid_report *report, u8
@@ -2088,7 +2088,7 @@ index 8c1b5f4295a4..4fc848d67c23 100644
  
  	ff_report = devm_kzalloc(&hdev->dev, sizeof(*ff_report), GFP_KERNEL);
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index 94fcdd2ae727..b78aec8f443c 100644
+index 94fcdd2ae727c..b78aec8f443c8 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -12,6 +12,7 @@
@@ -2121,10 +2121,10 @@ index 94fcdd2ae727..b78aec8f443c 100644
  
  int ally_gamepad_send_packet(struct ally_handheld *ally,
 -- 
-2.49.0
+2.51.2
 
 
-From 5e8a732730ae8e071a23644c1557276e86b3691d Mon Sep 17 00:00:00 2001
+From e171b6ec158719e63844d36dd6e3d8a6196d616f Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Thu, 27 Mar 2025 11:35:14 +1300
 Subject: [PATCH 07/16] asus-ally-hid: rename input devices
@@ -2136,7 +2136,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 20 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
-index 29a5302b5787..5758f211196a 100644
+index 29a5302b57878..5758f211196a9 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 @@ -24,6 +24,9 @@ static const struct hid_device_id rog_ally_devices[] = {
@@ -2180,7 +2180,7 @@ index 29a5302b5787..5758f211196a 100644
  		.reset_resume = ally_hid_reset_resume,
  		.driver = {
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index b78aec8f443c..dbfcb001e2d2 100644
+index b78aec8f443c8..dbfcb001e2d20 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -13,6 +13,7 @@
@@ -2192,10 +2192,10 @@ index b78aec8f443c..dbfcb001e2d2 100644
  #define HID_ALLY_X_INTF_IN 0x87
  
 -- 
-2.49.0
+2.51.2
 
 
-From 71f5e45435a9228fb1b2e231177eac54be74f1c9 Mon Sep 17 00:00:00 2001
+From 7865e768e3cfd1d8270d68d95da67581945dc64b Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Thu, 27 Mar 2025 18:13:37 +1300
 Subject: [PATCH 08/16] asus-ally-hid: add gamepad config structures
@@ -2213,7 +2213,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  create mode 100644 drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 
 diff --git a/drivers/hid/asus-ally-hid/Makefile b/drivers/hid/asus-ally-hid/Makefile
-index 296d6fa2544b..5c3c304b7b53 100644
+index 296d6fa2544be..5c3c304b7b53e 100644
 --- a/drivers/hid/asus-ally-hid/Makefile
 +++ b/drivers/hid/asus-ally-hid/Makefile
 @@ -2,5 +2,5 @@
@@ -2225,7 +2225,7 @@ index 296d6fa2544b..5c3c304b7b53 100644
  obj-$(CONFIG_ASUS_ALLY_HID) := asus-ally-hid.o
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 new file mode 100644
-index 000000000000..89b352b4174c
+index 0000000000000..89b352b4174c3
 --- /dev/null
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -0,0 +1,301 @@
@@ -2531,7 +2531,7 @@ index 000000000000..89b352b4174c
 +	hid_info(hdev, "Ally configuration system removed\n");
 +}
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
-index 5758f211196a..1e8f98b69332 100644
+index 5758f211196a9..1e8f98b69332c 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-core.c
 @@ -458,6 +458,12 @@ static int ally_hid_probe(struct hid_device *hdev, const struct hid_device_id *_
@@ -2558,7 +2558,7 @@ index 5758f211196a..1e8f98b69332 100644
  		ally_x_remove(hdev, ally);
  
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index dbfcb001e2d2..8174f78c5263 100644
+index dbfcb001e2d20..8174f78c52636 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -108,6 +108,37 @@ struct ally_x_input {
@@ -2619,10 +2619,10 @@ index dbfcb001e2d2..8174f78c5263 100644
  	struct device_attribute dev_attr_##_name = \
  		__ATTR(_sysfs_name, 0644, _name##_show, _name##_store)
 -- 
-2.49.0
+2.51.2
 
 
-From 8c9f765558b12de299fef0af1d47ffb7e4f05baf Mon Sep 17 00:00:00 2001
+From d9020a229ebd17bf03c1cb7efb0ad2ef7f0586ff Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Sun, 30 Mar 2025 14:25:18 +1300
 Subject: [PATCH 09/16] asus-ally-hid: test vibe
@@ -2634,7 +2634,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 102 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index 89b352b4174c..71519ad9cb96 100644
+index 89b352b4174c3..71519ad9cb96b 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -14,38 +14,6 @@
@@ -2822,7 +2822,7 @@ index 89b352b4174c..71519ad9cb96 100644
  	if (cfg->xbox_controller_support) {
  		ret = ally_set_xbox_controller(hdev, cfg, true);
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index 8174f78c5263..5147e155d65e 100644
+index 8174f78c52636..5147e155d65e1 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -137,6 +137,11 @@ struct ally_config {
@@ -2838,10 +2838,10 @@ index 8174f78c5263..5147e155d65e 100644
  
  struct ally_handheld {
 -- 
-2.49.0
+2.51.2
 
 
-From 6f4db5cce5bf31b57fee9b45f6ddb95103f6ef1d Mon Sep 17 00:00:00 2001
+From 89a9f3eac799b6df69d3559d6455a1888f1c9fce Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Sun, 30 Mar 2025 19:29:17 +1300
 Subject: [PATCH 10/16] asus-ally-hid: add deadzone and outer-threshold to JS
@@ -2856,7 +2856,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 208 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index 71519ad9cb96..12610fd24c65 100644
+index 71519ad9cb96b..12610fd24c655 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -243,6 +243,190 @@ static ssize_t vibration_intensity_store(struct device *dev,
@@ -3072,7 +3072,7 @@ index 71519ad9cb96..12610fd24c65 100644
  
  /**
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index 5147e155d65e..f2002ae2420a 100644
+index 5147e155d65e1..f2002ae2420a1 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -193,4 +193,17 @@ void ally_config_remove(struct hid_device *hdev, struct ally_handheld *ally);
@@ -3094,10 +3094,10 @@ index 5147e155d65e..f2002ae2420a 100644
 +
  #endif /* __ASUS_ALLY_H */
 -- 
-2.49.0
+2.51.2
 
 
-From 96b7f3037bba27bb095be76ab528792f706ac47e Mon Sep 17 00:00:00 2001
+From bc831de796376eac974f67f9b56cd74f2cdf3119 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Mon, 31 Mar 2025 14:01:05 +1300
 Subject: [PATCH 11/16] asus-ally-hid: test trigger dzot
@@ -3108,7 +3108,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  1 file changed, 144 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index 12610fd24c65..e5903352cfec 100644
+index 12610fd24c655..e5903352cfec7 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -427,6 +427,142 @@ static struct attribute *axis_xy_right_attrs[] = {
@@ -3270,10 +3270,10 @@ index 12610fd24c65..e5903352cfec 100644
  
  /**
 -- 
-2.49.0
+2.51.2
 
 
-From a62e8ce0c03c26955ce8af141878bc71cdab11c2 Mon Sep 17 00:00:00 2001
+From 5e4649f2019a30f4a3202ffb30ea76615e5db5b9 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Mon, 31 Mar 2025 14:29:08 +1300
 Subject: [PATCH 12/16] asus-ally-hid: test js anti-deadzone
@@ -3284,7 +3284,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  1 file changed, 135 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index e5903352cfec..9fc46359c609 100644
+index e5903352cfec7..9fc46359c609e 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -407,6 +407,135 @@ ALLY_DEVICE_CONST_ATTR_RO(js_deadzone_outer_max, deadzone_outer_max, "100\n");
@@ -3444,10 +3444,10 @@ index e5903352cfec..9fc46359c609 100644
  };
  
 -- 
-2.49.0
+2.51.2
 
 
-From 4022d46f9cf39b7dc9238b1076b4b1dab7d2c064 Mon Sep 17 00:00:00 2001
+From 9bb64cec1b23a82cda5054a8c3fd8102dc00ad9c Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Mon, 31 Mar 2025 15:43:53 +1300
 Subject: [PATCH 13/16] asus-ally-hid: test joystick response curves
@@ -3459,7 +3459,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 372 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index 9fc46359c609..e1bb12c753aa 100644
+index 9fc46359c609e..e1bb12c753aa6 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -536,6 +536,322 @@ ALLY_DEVICE_ATTR_RW(js_right_anti_deadzone, anti_deadzone);
@@ -3844,7 +3844,7 @@ index 9fc46359c609..e1bb12c753aa 100644
  	if (cfg->xbox_controller_support) {
  		ret = ally_set_xbox_controller(hdev, cfg, true);
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index f2002ae2420a..417750a750c3 100644
+index f2002ae2420a1..417750a750c31 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -108,6 +108,18 @@ struct ally_x_input {
@@ -3888,10 +3888,10 @@ index f2002ae2420a..417750a750c3 100644
  	static ssize_t fname##_show(struct device *dev,				\
  				   struct device_attribute *attr, char *buf)	\
 -- 
-2.49.0
+2.51.2
 
 
-From eb945c64a4fc6bf957cac69340c4606475d5526b Mon Sep 17 00:00:00 2001
+From 0fea02ddb92499767654a1e64e49f3b6d2ea6e13 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Mon, 31 Mar 2025 16:23:27 +1300
 Subject: [PATCH 14/16] asus-ally-hid: test btn turbo
@@ -3903,7 +3903,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 387 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index e1bb12c753aa..0aaf81fa497c 100644
+index e1bb12c753aa6..0aaf81fa497c6 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -1060,6 +1060,305 @@ static const struct attribute_group ally_attr_groups[] = {
@@ -4240,7 +4240,7 @@ index e1bb12c753aa..0aaf81fa497c 100644
  	for (i = ARRAY_SIZE(ally_attr_groups) - 1; i >= 0; i--)
  		sysfs_remove_group(&hdev->dev.kobj, &ally_attr_groups[i]);
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index 417750a750c3..8771c1490cae 100644
+index 417750a750c31..8771c1490caee 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -50,6 +50,47 @@ enum ally_command_codes {
@@ -4340,10 +4340,10 @@ index 417750a750c3..8771c1490cae 100644
  	struct joystick_resp_curve right_curve;
  };
 -- 
-2.49.0
+2.51.2
 
 
-From 842d3743acf9e587694db081ed337d47bb51945f Mon Sep 17 00:00:00 2001
+From 80f4b5201ece7161ff8c4791082c18d92e397c7c Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Mon, 31 Mar 2025 20:45:52 +1300
 Subject: [PATCH 15/16] asus-ally-hid: test gamepad mode
@@ -4355,7 +4355,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 151 insertions(+)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index 0aaf81fa497c..00dd7883e252 100644
+index 0aaf81fa497c6..00dd7883e252b 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -1032,9 +1032,146 @@ static struct attribute *axis_z_right_attrs[] = {
@@ -4517,7 +4517,7 @@ index 0aaf81fa497c..00dd7883e252 100644
  	cfg->left_deadzone = 10;
  	cfg->left_outer_threshold = 90;
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index 8771c1490cae..b26438731e99 100644
+index 8771c1490caee..b26438731e997 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -50,6 +50,16 @@ enum ally_command_codes {
@@ -4538,10 +4538,10 @@ index 8771c1490cae..b26438731e99 100644
  enum ally_button_id {
  	ALLY_BTN_A,
 -- 
-2.49.0
+2.51.2
 
 
-From b024310f39735e3f4247fc2df92215f8f607612d Mon Sep 17 00:00:00 2001
+From 6e1444d4c331d4fc709e126f33762df279b5cda8 Mon Sep 17 00:00:00 2001
 From: Luke Jones <luke@ljones.dev>
 Date: Wed, 23 Apr 2025 14:27:33 +1200
 Subject: [PATCH 16/16] ally: tmp: remapping
@@ -4553,7 +4553,7 @@ Signed-off-by: Luke Jones <luke@ljones.dev>
  2 files changed, 725 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
-index 00dd7883e252..1624880121c4 100644
+index 00dd7883e252b..1624880121c4c 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 +++ b/drivers/hid/asus-ally-hid/asus-ally-hid-config.c
 @@ -6,6 +6,7 @@
@@ -5377,7 +5377,7 @@ index 00dd7883e252..1624880121c4 100644
  
  /**
 diff --git a/drivers/hid/asus-ally-hid/asus-ally.h b/drivers/hid/asus-ally-hid/asus-ally.h
-index b26438731e99..fd9c788a4a42 100644
+index b26438731e997..fd9c788a4a429 100644
 --- a/drivers/hid/asus-ally-hid/asus-ally.h
 +++ b/drivers/hid/asus-ally-hid/asus-ally.h
 @@ -239,6 +239,7 @@ struct ally_config {
@@ -5389,5 +5389,5 @@ index b26438731e99..fd9c788a4a42 100644
  	struct joystick_resp_curve left_curve;
  	struct joystick_resp_curve right_curve;
 -- 
-2.49.0
+2.51.2
 
