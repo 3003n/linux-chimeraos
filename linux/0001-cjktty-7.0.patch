@@ -1,4 +1,4 @@
-From 0648f4fee215e62d0c49013d1555df3ca6cd1c66 Mon Sep 17 00:00:00 2001
+From 96ecc53661865aa991a3261f34999d53aadeae73 Mon Sep 17 00:00:00 2001
 From: honjow <honjow311@gmail.com>
 Date: Mon, 2 Mar 2026 11:10:07 +0800
 Subject: [PATCH] font: cjktty 16x16
@@ -7,7 +7,7 @@ Subject: [PATCH] font: cjktty 16x16
  drivers/tty/vt/selection.c              |      2 +
  drivers/tty/vt/vt.c                     |     56 +-
  drivers/video/fbdev/core/bitblit.c      |     62 +-
- drivers/video/fbdev/core/fbcon.c        |     61 +-
+ drivers/video/fbdev/core/fbcon.c        |     33 +-
  drivers/video/fbdev/core/fbcon.h        |      4 +
  drivers/video/fbdev/core/fbcon_ccw.c    |      6 +-
  drivers/video/fbdev/core/fbcon_cw.c     |      6 +-
@@ -20,7 +20,7 @@ Subject: [PATCH] font: cjktty 16x16
  lib/fonts/font_cjk_16x16.h              | 196609 +++++++++++++++++++++
  lib/fonts/font_cjk_32x32.c              |     27 +
  lib/fonts/fonts.c                       |      6 +
- 16 files changed, 196921 insertions(+), 56 deletions(-)
+ 16 files changed, 196906 insertions(+), 43 deletions(-)
  create mode 100644 lib/fonts/font_cjk_16x16.c
  create mode 100644 lib/fonts/font_cjk_16x16.h
  create mode 100644 lib/fonts/font_cjk_32x32.c
@@ -343,7 +343,7 @@ index 085ffb44c51a9..b9e2dff666705 100644
  	if (par->cursor_state.image.data != src ||
  	    par->cursor_reset) {
 diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index 666261ae59d82..b844e71a05721 100644
+index 666261ae59d82..bc8278940fc5b 100644
 --- a/drivers/video/fbdev/core/fbcon.c
 +++ b/drivers/video/fbdev/core/fbcon.c
 @@ -1104,7 +1104,7 @@ static void fbcon_init(struct vc_data *vc, bool init)
@@ -364,31 +364,16 @@ index 666261ae59d82..b844e71a05721 100644
  		vc->vc_hi_font_mask = 0;
  	} else {
  		vc->vc_hi_font_mask = 0x100;
-@@ -1646,13 +1646,16 @@ static void fbcon_redraw_blit(struct vc_data *vc, struct fb_info *info,
- 				}
+@@ -1647,6 +1647,8 @@ static void fbcon_redraw_blit(struct vc_data *vc, struct fb_info *info,
  			}
  
--			scr_writew(c, d);
--			s++;
--			d++;
--		} while (s < le);
--		if (s > start)
--			par->bitops->bmove(vc, info, line + ycount, x, line, x, 1,
--					     s - start);
-+		scr_writew(c, d);
-+		scr_writew(scr_readw(s + (vc->vc_screenbuf_size >> 1)),
-+			d + (vc->vc_screenbuf_size >> 1));
-+		console_conditional_schedule();
-+		s++;
-+		d++;
-+	} while (s < le);
-+	if (s > start)
-+		par->bitops->bmove(vc, info, line + ycount, x, line, x, 1,
-+				     s - start);
- 		if (ycount > 0)
- 			line++;
- 		else {
-@@ -1666,6 +1669,7 @@ static void fbcon_redraw_blit(struct vc_data *vc, struct fb_info *info,
+ 			scr_writew(c, d);
++			scr_writew(scr_readw(s + (vc->vc_screenbuf_size >> 1)),
++				d + (vc->vc_screenbuf_size >> 1));
+ 			s++;
+ 			d++;
+ 		} while (s < le);
+@@ -1666,6 +1668,7 @@ static void fbcon_redraw_blit(struct vc_data *vc, struct fb_info *info,
  
  static void fbcon_redraw(struct vc_data *vc, int line, int count, int offset)
  {
@@ -396,7 +381,7 @@ index 666261ae59d82..b844e71a05721 100644
  	unsigned short *d = (unsigned short *)
  	    (vc->vc_origin + vc->vc_size_row * line);
  	unsigned short *s = d + offset;
-@@ -1688,23 +1692,30 @@ static void fbcon_redraw(struct vc_data *vc, int line, int count, int offset)
+@@ -1688,18 +1691,24 @@ static void fbcon_redraw(struct vc_data *vc, int line, int count, int offset)
  					start = s;
  				}
  			}
@@ -424,25 +409,13 @@ index 666261ae59d82..b844e71a05721 100644
 +					}
  				}
  			}
--			scr_writew(c, d);
--			s++;
--			d++;
--		} while (s < le);
--		if (s > start)
--			fbcon_putcs(vc, start, s - start, line, x);
-+		scr_writew(c, d);
-+		scr_writew(scr_readw(s + (vc->vc_screenbuf_size >> 1)),
-+			d + (vc->vc_screenbuf_size >> 1));
-+		console_conditional_schedule();
-+		s++;
-+		d++;
-+	} while (s < le);
-+	if (s > start)
-+		fbcon_putcs(vc, start, s - start, line, x);
- 		if (offset > 0)
- 			line++;
- 		else {
-@@ -2183,7 +2194,7 @@ static bool fbcon_switch(struct vc_data *vc)
+ 			scr_writew(c, d);
++			scr_writew(scr_readw(s + (vc->vc_screenbuf_size >> 1)),
++				d + (vc->vc_screenbuf_size >> 1));
+ 			s++;
+ 			d++;
+ 		} while (s < le);
+@@ -2183,7 +2192,7 @@ static bool fbcon_switch(struct vc_data *vc)
  	vc->vc_can_do_color = (fb_get_color_depth(&info->var, &info->fix)!=1);
  	vc->vc_complement_mask = vc->vc_can_do_color ? 0x7700 : 0x0800;
  
