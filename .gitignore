@@ -11,3 +11,5 @@ linux/*.tar.gz
 testbuild.sh
 *.tar.xz
 *cjktty-6.*.patch
+*.mbx
+*.cover
