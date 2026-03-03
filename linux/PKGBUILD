@@ -48,6 +48,7 @@ source=(
 
   # 0004-lenovo-wmi-hotkey-v11.patch
   0005-lenovo-wmi-v12.patch
+  0090-libbpf-fix-gcc15-discarded-qualifiers.patch
 
   # 0007-asus-ally-hid.patch
   # 0008-oxpec-Add-support-for-AOKZOE-A1X.patch
@@ -70,7 +71,8 @@ sha256sums=('9b38e07ee09658b5507bca575eb6987b055fc138b1acc522e565e77a5138a96f'
             '30d0b395d262c02058a54d72f5af5c8febfac74408a661766e61e8adba87b933'
             'a93750d533c660f7e6a8536998dc607884b6b69d934f125d6950a86c2a601d47'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
-            '1ceb678e4d4cdc93f186bf77c028067016455fe6b91377b163f2aa24c8b98cdd')
+            '1ceb678e4d4cdc93f186bf77c028067016455fe6b91377b163f2aa24c8b98cdd'
+            '82ce4ac89e8917d7a334134ac4a0b61e873ccd170ebf2041ef5d70415a22233a')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
