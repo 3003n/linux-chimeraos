@@ -1,7 +1,7 @@
-From 51915027a9512143a568c4a5e02a74ca6720c3cc Mon Sep 17 00:00:00 2001
+From 54b0d650bcd41139e845078555ad38b84be3b950 Mon Sep 17 00:00:00 2001
 From: Matthew Schwartz <matthew.schwartz@linux.dev>
 Date: Sat, 20 Dec 2025 19:57:41 -0800
-Subject: [PATCH 1/4] [FOR-UPSTREAM] mmc: rtsx_pci_sdmmc: drop
+Subject: [PATCH 1/3] [FOR-UPSTREAM] mmc: rtsx_pci_sdmmc: drop
  MMC_CAP_AGGRESSIVE_PM for RTS525A
 
 Using MMC_CAP_AGGRESSIVE_PM on RTS525A card readers causes game
@@ -18,10 +18,10 @@ Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/mmc/host/rtsx_pci_sdmmc.c b/drivers/mmc/host/rtsx_pci_sdmmc.c
-index 0c6eb60a95fdb..993c890beedce 100644
+index 4db3328f46dfb..b4a531e8c8894 100644
 --- a/drivers/mmc/host/rtsx_pci_sdmmc.c
 +++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
-@@ -1456,7 +1456,7 @@ static void realtek_init_host(struct realtek_pci_sdmmc *host)
+@@ -1497,7 +1497,7 @@ static void realtek_init_host(struct realtek_pci_sdmmc *host)
  	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SD_HIGHSPEED |
  		MMC_CAP_MMC_HIGHSPEED | MMC_CAP_BUS_WIDTH_TEST |
  		MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25;
@@ -34,10 +34,10 @@ index 0c6eb60a95fdb..993c890beedce 100644
 2.53.0
 
 
-From 36271049af398ff542e28f2d7609f1f93001a35a Mon Sep 17 00:00:00 2001
+From 9cdbf86f653ff1fd10f65f78b41ac33f4d5ffede Mon Sep 17 00:00:00 2001
 From: Matthew Schwartz <matthew.schwartz@linux.dev>
 Date: Sat, 20 Dec 2025 19:59:53 -0800
-Subject: [PATCH 2/4] [FOR-UPSTREAM] misc: rtsx_pcr: prevent
+Subject: [PATCH 2/3] [FOR-UPSTREAM] misc: rtsx_pcr: prevent
  pm_schedule_suspend for RTS525A
 
 The chip's pm_schedule_suspend sequence can sometimes cause SD card
@@ -52,10 +52,10 @@ Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index a7b066c487400..20c2c9abd5ecf 100644
+index 2b6a994c6fe1f..f718e4b0ee4e5 100644
 --- a/drivers/misc/cardreader/rtsx_pcr.c
 +++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -1761,7 +1761,7 @@ static int rtsx_pci_runtime_idle(struct device *device)
+@@ -1760,7 +1760,7 @@ static int rtsx_pci_runtime_idle(struct device *device)
  
  	mutex_unlock(&pcr->pcr_mutex);
  
@@ -68,10 +68,10 @@ index a7b066c487400..20c2c9abd5ecf 100644
 2.53.0
 
 
-From 91e35eb59bda72285439888fbb0916e105bfa6c3 Mon Sep 17 00:00:00 2001
+From 9907ca4eb3d0703d4f396fa9448f507235a85e5c Mon Sep 17 00:00:00 2001
 From: Matthew Schwartz <matthew.schwartz@linux.dev>
 Date: Sat, 20 Dec 2025 19:49:24 -0800
-Subject: [PATCH 3/4] [FOR-UPSTREAM] mmc: rtsx_pci_sdmmc: increase delay after
+Subject: [PATCH 3/3] [FOR-UPSTREAM] mmc: rtsx_pci_sdmmc: increase delay after
  power on for SD cards
 
 An mdelay of 1 leads to unreliable SD card initialization on some cards,
@@ -86,7 +86,7 @@ Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/mmc/host/rtsx_pci_sdmmc.c b/drivers/mmc/host/rtsx_pci_sdmmc.c
-index 993c890beedce..82945ebbf9787 100644
+index b4a531e8c8894..adaaadf3015a7 100644
 --- a/drivers/mmc/host/rtsx_pci_sdmmc.c
 +++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
 @@ -937,7 +937,7 @@ static int sd_power_on(struct realtek_pci_sdmmc *host, unsigned char power_mode)
@@ -98,85 +98,6 @@ index 993c890beedce..82945ebbf9787 100644
  
  	err = rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, SD_OUTPUT_EN);
  	if (err < 0)
--- 
-2.53.0
-
-
-From b201e6cc4b36fdd0dda9eacbd57580cb3ba7ecc0 Mon Sep 17 00:00:00 2001
-From: Matthew Schwartz <matthew.schwartz@linux.dev>
-Date: Sat, 20 Dec 2025 11:07:06 -0800
-Subject: [PATCH 4/4] [FOR-UPSTREAM] mmc: rtsx_pci_sdmmc: copy card_busy logic
- from rtsx_usb_sdmmc driver
-
-Handles card_busy signal to avoid constant message spam of "mmc0: cannot
-verify signal voltage switch" during SD UHS-I mode switching.
-
-Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
----
- drivers/mmc/host/rtsx_pci_sdmmc.c | 43 +++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/drivers/mmc/host/rtsx_pci_sdmmc.c b/drivers/mmc/host/rtsx_pci_sdmmc.c
-index 82945ebbf9787..a7c7daf66d5cd 100644
---- a/drivers/mmc/host/rtsx_pci_sdmmc.c
-+++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
-@@ -1306,6 +1306,48 @@ static int sdmmc_switch_voltage(struct mmc_host *mmc, struct mmc_ios *ios)
- 	return err;
- }
- 
-+static int sdmmc_card_busy(struct mmc_host *mmc)
-+{
-+	struct realtek_pci_sdmmc *host = mmc_priv(mmc);
-+	struct rtsx_pcr *pcr = host->pcr;
-+	int err;
-+	u8 stat;
-+	u8 mask = SD_DAT3_STATUS | SD_DAT2_STATUS | SD_DAT1_STATUS
-+	| SD_DAT0_STATUS;
-+
-+	dev_dbg(sdmmc_dev(host), "%s\n", __func__);
-+
-+	mutex_lock(&pcr->pcr_mutex);
-+
-+	rtsx_pci_start_run(pcr);
-+
-+	err = rtsx_pci_write_register(pcr, SD_BUS_STAT,
-+				      SD_CLK_TOGGLE_EN | SD_CLK_FORCE_STOP,
-+			       SD_CLK_TOGGLE_EN);
-+	if (err)
-+		goto out;
-+
-+	mdelay(1);
-+
-+	err = rtsx_pci_read_register(pcr, SD_BUS_STAT, &stat);
-+	if (err)
-+		goto out;
-+
-+	err = rtsx_pci_write_register(pcr, SD_BUS_STAT,
-+				      SD_CLK_TOGGLE_EN | SD_CLK_FORCE_STOP, 0);
-+	out:
-+	mutex_unlock(&pcr->pcr_mutex);
-+
-+	if (err)
-+		return err;
-+
-+	/* check if any pin between dat[0:3] is low */
-+	if ((stat & mask) != mask)
-+		return 1;
-+	else
-+		return 0;
-+}
-+
- static int sdmmc_execute_tuning(struct mmc_host *mmc, u32 opcode)
- {
- 	struct realtek_pci_sdmmc *host = mmc_priv(mmc);
-@@ -1418,6 +1460,7 @@ static const struct mmc_host_ops realtek_pci_sdmmc_ops = {
- 	.get_ro = sdmmc_get_ro,
- 	.get_cd = sdmmc_get_cd,
- 	.start_signal_voltage_switch = sdmmc_switch_voltage,
-+	.card_busy = sdmmc_card_busy,
- 	.execute_tuning = sdmmc_execute_tuning,
- 	.init_sd_express = sdmmc_init_sd_express,
- };
 -- 
 2.53.0
 
