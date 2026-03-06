@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=6.17.7
 _pkgver=6.17.7-ba22
-pkgrel=16
+pkgrel=17
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -60,7 +60,7 @@ source=(
   0009-Input-Don-t-program-hw-debounce-for-soc_button_array.patch
   0010-Input-Don-t-send-fake-button-presses-to-wake-system.patch
 
-  0011-hid_add_legion_go_and_go_s_drivers_v4.patch
+  0011-hid_add_legion_go_and_go_s_drivers_v5.patch
 
   0012-PCI-PM-Add-MSI-MS-1T41-DMI-quirk-to-skip-forced-D0-i.patch
 
@@ -92,7 +92,7 @@ sha256sums=('f9a9b8764a0916ad739ba7f1fbacc9ccca54e226ef97dfdb7f65a86ecba861d0'
             'c8868f3a69c8f419cbecd90da927f29334143cde6578e0362be3006972286177'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
-            '266a9b0af44fe5a9d904194019f5696060e89a73e1f9150592171ffae3b1bcde'
+            '7e5b5fa0677cfedb59f86ae2e438a0141d0969258141cbae3dbc57772438f195'
             '98f1ab2064951ac20d7e9f5dd80a213d00358dc924b26731264711a041bf7293'
             '4a82d95bafb5de4bb24e758630bfc519ed852121f6fccfa7b1553708a384209d'
             'b82ea99afb7ace8a00a62b0b04f74a25cafb8225d27d4af02e1497b79c31babb'
