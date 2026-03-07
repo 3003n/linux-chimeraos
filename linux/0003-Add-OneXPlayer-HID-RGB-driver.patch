@@ -1,4 +1,4 @@
-From ceeb72b5decc0edfd1e5c3bd2480ee87003b6018 Mon Sep 17 00:00:00 2001
+From fb62e881a7191d3e5769b35057fb1481a4b3b9d3 Mon Sep 17 00:00:00 2001
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 Date: Mon, 20 Oct 2025 22:07:05 -0700
 Subject: [PATCH] Add OneXPlayer HID RGB driver.
@@ -13,10 +13,10 @@ Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
  create mode 100644 drivers/hid/hid-oxp.c
 
 diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index af94ac522defd..7e8c8379f95e6 100644
+index c1d9f7c6a5f23..3d33149f7991f 100644
 --- a/drivers/hid/Kconfig
 +++ b/drivers/hid/Kconfig
-@@ -897,6 +897,18 @@ config HID_ORTEK
+@@ -888,6 +888,18 @@ config HID_ORTEK
  	   - Ortek WKB-2000
  	   - Skycable wireless presenter
  
@@ -36,10 +36,10 @@ index af94ac522defd..7e8c8379f95e6 100644
  	tristate "Pantherlord/GreenAsia game controller"
  	help
 diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index 5e4e311ad4f06..02ff5f6454309 100644
+index e01838239ae64..6a1e8e0734a4b 100644
 --- a/drivers/hid/Makefile
 +++ b/drivers/hid/Makefile
-@@ -97,6 +97,8 @@ obj-$(CONFIG_HID_NTI)			+= hid-nti.o
+@@ -96,6 +96,8 @@ obj-$(CONFIG_HID_NTI)			+= hid-nti.o
  obj-$(CONFIG_HID_NTRIG)		+= hid-ntrig.o
  obj-$(CONFIG_HID_NVIDIA_SHIELD)	+= hid-nvidia-shield.o
  obj-$(CONFIG_HID_ORTEK)		+= hid-ortek.o
@@ -49,10 +49,10 @@ index 5e4e311ad4f06..02ff5f6454309 100644
  obj-$(CONFIG_HID_PANTHERLORD)	+= hid-pl.o
  obj-$(CONFIG_HID_PENMOUNT)	+= hid-penmount.o
 diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index dccf1a321a7fc..7d139a87eca33 100644
+index a11327c3aff5a..a6aa94638acd2 100644
 --- a/drivers/hid/hid-ids.h
 +++ b/drivers/hid/hid-ids.h
-@@ -1084,6 +1084,12 @@
+@@ -1106,6 +1106,12 @@
  #define USB_VENDOR_ID_NVIDIA				0x0955
  #define USB_DEVICE_ID_NVIDIA_THUNDERSTRIKE_CONTROLLER	0x7214
  
@@ -67,7 +67,7 @@ index dccf1a321a7fc..7d139a87eca33 100644
  
 diff --git a/drivers/hid/hid-oxp.c b/drivers/hid/hid-oxp.c
 new file mode 100644
-index 0000000000000..c15f936401a9f
+index 0000000000000..01789d0322f37
 --- /dev/null
 +++ b/drivers/hid/hid-oxp.c
 @@ -0,0 +1,694 @@
@@ -299,7 +299,7 @@ index 0000000000000..c15f936401a9f
 +static int gen_2_property_out(enum oxp_function_index fid, u8 *data,
 +			      u8 data_size)
 +{
-+	u8 header[] = { fid, GEN2_MESSAGE_HEADER, 0x00 };
++	u8 header[] = { fid, GEN2_MESSAGE_HEADER, 0x01 };
 +	u8 footer[] = { GEN2_MESSAGE_HEADER, fid };
 +	size_t header_size = ARRAY_SIZE(header);
 +	size_t footer_size = ARRAY_SIZE(footer);
@@ -379,7 +379,7 @@ index 0000000000000..c15f936401a9f
 +		size = 57;
 +		data = (u8[57]){ OXP_EFFECT_MONO_TRUE, 0x00, 0x02 };
 +
-+		for (i = 3; i < size / 3; i++) {
++		for (i = 1; i < size / 3; i++) {
 +			data[3 * i] = red;
 +			data[3 * i + 1] = green;
 +			data[3 * i + 2] = blue;
@@ -766,5 +766,5 @@ index 0000000000000..c15f936401a9f
 +MODULE_DESCRIPTION("Driver for OneXPlayer HID RGB Interfaces.");
 +MODULE_LICENSE("GPL");
 -- 
-2.52.0
+2.53.0
 
