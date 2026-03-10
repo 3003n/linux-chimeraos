@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=7.0.0.rc3
 _pkgver=7.0.0-rc3-sk1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -77,7 +77,11 @@ source=(
   # https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/7510
   # 0023-drm-xe-HACK-Disable-GuC-RC-earlier.patch
 
-  0034-platform-x86-msi-wmi-platform-update-tdp-range.patch
+  0024-hdmi-vrr-v3.patch
+
+  0025-lenovo_wmi_add_fixes_and_enhancement.patch
+
+  0050-platform-x86-msi-wmi-platform-update-tdp-range.patch
 )
 
 validpgpkeys=(
@@ -102,6 +106,8 @@ sha256sums=('bc61d91c0b9838ff9b518f40b61d5df163d3bc95a46cb9aad96bc2fe8936237a'
             'df4d144cc849f4d8cd28b522a2307da96f579a50a6218d96e39383c6ac183685'
             'b82ea99afb7ace8a00a62b0b04f74a25cafb8225d27d4af02e1497b79c31babb'
             '33ac17b298984e3189abc12d4e64086373fd8965fd3883794acbaa749ee63aa3'
+            '172e93a2549bfbc4b4a9bf9bd2c691f5fa294e3051fb08a809004a872d808a4e'
+            'e3ba05db290ea11eecdb37801cdc1308eb79b870eb95e4b86b41b5742ed7fff8'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
