@@ -79,7 +79,7 @@ source=(
 
   0024-hdmi-vrr-v3.patch
 
-  0025-lenovo_wmi_add_fixes_and_enhancement.patch
+  0025-lenovo_wmi_add_fixes_and_enhancement_v4.patch
 
   0050-platform-x86-msi-wmi-platform-update-tdp-range.patch
 )
@@ -107,7 +107,7 @@ sha256sums=('bc61d91c0b9838ff9b518f40b61d5df163d3bc95a46cb9aad96bc2fe8936237a'
             'b82ea99afb7ace8a00a62b0b04f74a25cafb8225d27d4af02e1497b79c31babb'
             '33ac17b298984e3189abc12d4e64086373fd8965fd3883794acbaa749ee63aa3'
             '172e93a2549bfbc4b4a9bf9bd2c691f5fa294e3051fb08a809004a872d808a4e'
-            'e3ba05db290ea11eecdb37801cdc1308eb79b870eb95e4b86b41b5742ed7fff8'
+            'ca7bffe681d2f7ba3e90c5ac6513ff4007444e38ed4f03a001309c24bf301c6a'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
 
 export KBUILD_BUILD_HOST=archlinux
