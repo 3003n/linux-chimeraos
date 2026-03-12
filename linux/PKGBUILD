@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=7.0.0.rc3
 _pkgver=7.0.0-rc3-sk1
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
