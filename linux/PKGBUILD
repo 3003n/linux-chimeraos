@@ -201,6 +201,8 @@ prepare() {
   # find drivers/custom -type d -empty -delete
 
   echo "Setting version..."
+  # Insert e.g. -sk2 before pkgbase suffix (localversion* are concatenated in sort order)
+  echo "-${pkgver##*.}" > localversion.05-skver
   echo "${pkgbase#linux}" > localversion.10-pkgname
   echo "-$pkgrel" > localversion.20-pkgrel
   make defconfig
