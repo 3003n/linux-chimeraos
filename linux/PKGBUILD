@@ -3,8 +3,8 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.0.0.rc5.sk2
-_pkgver=7.0.0-rc5-sk2
+pkgver=7.0.0.rc5.sk3
+_pkgver=7.0.0-rc5-sk3
 pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
@@ -74,9 +74,6 @@ source=(
   0021-asus-ally-hid-disable-wakeup-attribute-on-N-Key-devi.patch
   0022-asus-ally-hid-grab-short-press-QAM-on-ROG-Xbox-Ally-.patch
 
-  # https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/7510
-  # 0023-drm-xe-HACK-Disable-GuC-RC-earlier.patch
-
   0024-hdmi-vrr-v3.patch
 
   0025-lenovo_wmi_add_fixes_and_enhancement_v4.patch
@@ -91,7 +88,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('9a530bd913fb67b27b144d1d9b4693b4ea1ee0306731458ba9082c4277e74d06'
+sha256sums=('e5fe9324039e9e632882fbdee28887cfa450a071847070058ff7a2316990ad16'
             '21ac2b1c08aac9fc4f980bbee8f1aba9c177d7f374a1f8a787b71f3488ac844b'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             'ff06f64c98c05c0354a6b22ee0f6e81a77762f57347fa56f7868b788f99f5f12'
