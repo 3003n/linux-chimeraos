@@ -54,7 +54,7 @@ jobs:
         id: build-kernel-package
         shell: bash
         run: |
-          su build -c "cd /home/build/linux && MAKEFLAGS=-j$(nproc) makepkg"
+          runuser -u build -- bash -lc 'cd /home/build/linux && MAKEFLAGS=-j$(nproc) makepkg'
           . /home/build/linux/PKGBUILD
           full_version=${pkgver}-${pkgrel}
           echo "full_version=$full_version" >> "$GITHUB_OUTPUT"
