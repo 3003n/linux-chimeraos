@@ -32,4 +32,4 @@ jobs:
       - name: Prepare sources
         shell: bash
         run: |
-          su build bash -c "cd /home/build/linux && makepkg --nobuild"
+          su build -c "cd /home/build/linux && makepkg --nobuild"
