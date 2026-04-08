@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=7.0.0.rc7.sk2
 _pkgver=7.0.0-rc7-sk2
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -52,6 +52,7 @@ source=(
   "0002-cjktty-32.patch::https://github.com/bigshans/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
+  0004-Add-OneXPlayer-HID-RGB-driver.patch
 
   # 0006-s5-power-v7.patch
   0007-asus-ally-hid.patch
@@ -95,6 +96,7 @@ sha256sums=('138a147110c451bb25567e98891be7d596948234adc688884955b9b4d1e3d5db'
             '0f44500fff501d8b8739c263482aa1c6dae900613d14520fc88f6e07a1b90e89'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '7b4245bb611a65cb27f072ae809633f5a53677b7076230a81751aac5f03324e5'
+            'cd0da5cd2bf8f9384f85a875c6ec82f6fa463eaaa02071a712b4f804e63a6cd4'
             'e9478a11cef930081d35de82f24946b12c01c6efe8e3cbe0034f0d517d190dd5'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
