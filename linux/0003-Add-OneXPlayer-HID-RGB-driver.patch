@@ -1,8 +1,8 @@
 From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v2 1/5] HID: hid-oxp: Add OneXPlayer configuration driver
+Subject: [PATCH v3 1/5] HID: hid-oxp: Add OneXPlayer configuration driver
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Date: Tue, 07 Apr 2026 04:13:50 +0000
-Message-Id: <20260407041354.2283201-2-derekjohn.clark@gmail.com>
+Date: Sun, 12 Apr 2026 21:34:40 +0000
+Message-Id: <20260412213444.2231505-2-derekjohn.clark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -39,6 +39,8 @@ write, queue the work, then return so userspace can release its write
 thread. The work queue is only used for brightness/multi-intensity as
 that is the path likely to receive rapid successive writes.
 
+Reviewed-by: Zhouwang Huang <honjow311@gmail.com>
+Tested-by: Zhouwang Huang <honjow311@gmail.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
  MAINTAINERS           |   6 +
@@ -776,10 +778,10 @@ index 000000000000..c4219ecd8d71
 2.53.0
 
 From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v2 2/5] HID: hid-oxp: Add Second Generation RGB Control
+Subject: [PATCH v3 2/5] HID: hid-oxp: Add Second Generation RGB Control
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Date: Tue, 07 Apr 2026 04:13:51 +0000
-Message-Id: <20260407041354.2283201-3-derekjohn.clark@gmail.com>
+Date: Sun, 12 Apr 2026 21:34:41 +0000
+Message-Id: <20260412213444.2231505-3-derekjohn.clark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -792,6 +794,8 @@ Some devices have both a GEN1 MCU for RGB control and a GEN2 MCU for
 button mapping. To avoid conflicts, quirk these devices to skip RGB
 setup for the GEN2_USAGE_PAGE.
 
+Reviewed-by: Zhouwang Huang <honjow311@gmail.com>
+Tested-by: Zhouwang Huang <honjow311@gmail.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
 v2:
@@ -1098,11 +1102,11 @@ index c4219ecd8d71..25214356163e 100644
 2.53.0
 
 From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v2 3/5] HID: hid-oxp: Add Second Generation Gamepad Mode
+Subject: [PATCH v3 3/5] HID: hid-oxp: Add Second Generation Gamepad Mode
  Switch
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Date: Tue, 07 Apr 2026 04:13:52 +0000
-Message-Id: <20260407041354.2283201-4-derekjohn.clark@gmail.com>
+Date: Sun, 12 Apr 2026 21:34:42 +0000
+Message-Id: <20260412213444.2231505-4-derekjohn.clark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -1113,6 +1117,8 @@ device MCU that puts it into a state where all events are routed to an
 hidraw interface instead of the xpad evdev interface. This allows for
 debugging the hardware input mapping added in the next patch.
 
+Reviewed-by: Zhouwang Huang <honjow311@gmail.com>
+Tested-by: Zhouwang Huang <honjow311@gmail.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
 v2:
@@ -1308,10 +1314,10 @@ index 25214356163e..c62952537d98 100644
 2.53.0
 
 From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v2 4/5] HID: hid-oxp: Add Button Mapping Interface
+Subject: [PATCH v3 4/5] HID: hid-oxp: Add Button Mapping Interface
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Date: Tue, 07 Apr 2026 04:13:53 +0000
-Message-Id: <20260407041354.2283201-5-derekjohn.clark@gmail.com>
+Date: Sun, 12 Apr 2026 21:34:43 +0000
+Message-Id: <20260412213444.2231505-5-derekjohn.clark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -1330,17 +1336,21 @@ debounce work queue method we used for RGB. This will allow for
 userspace or udev rules to rapidly map all buttons. The values will
 be cached before the final write is finally sent to the device.
 
+Reviewed-by: Zhouwang Huang <honjow311@gmail.com>
+Tested-by: Zhouwang Huang <honjow311@gmail.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
+v3:
+  - Ensure default button map is properly init during probe.
 v2:
   - Add detection of post-suspend MCU init to trigger setting the button
     map again.
 ---
- drivers/hid/hid-oxp.c | 565 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 565 insertions(+)
+ drivers/hid/hid-oxp.c | 569 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 567 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hid/hid-oxp.c b/drivers/hid/hid-oxp.c
-index c62952537d98..1100f1f14f35 100644
+index c62952537d98..959ec1a90d22 100644
 --- a/drivers/hid/hid-oxp.c
 +++ b/drivers/hid/hid-oxp.c
 @@ -34,10 +34,145 @@ enum oxp_function_index {
@@ -1638,11 +1648,10 @@ index c62952537d98..1100f1f14f35 100644
 +	return oxp_gen_2_property_out(OXP_FID_GEN2_KEY_STATE, page_2, ARRAY_SIZE(page_2));
 +}
 +
-+static int oxp_reset_buttons(void)
++static void oxp_reset_buttons(void)
 +{
 +	oxp_set_defaults_bmap_1(drvdata.bmap_1);
 +	oxp_set_defaults_bmap_2(drvdata.bmap_2);
-+	return oxp_set_buttons();
 +}
 +
 +static ssize_t reset_buttons_store(struct device *dev,
@@ -1658,7 +1667,8 @@ index c62952537d98..1100f1f14f35 100644
 +	if (val != 1)
 +		return -EINVAL;
 +
-+	ret = oxp_reset_buttons();
++	oxp_reset_buttons();
++	ret = oxp_set_buttons();
 +	if (ret)
 +		return ret;
 +
@@ -1951,10 +1961,12 @@ index c62952537d98..1100f1f14f35 100644
  	int ret;
  
  	hid_set_drvdata(hdev, &drvdata);
-@@ -855,6 +1408,18 @@ static int oxp_cfg_probe(struct hid_device *hdev, u16 up)
+@@ -855,9 +1408,21 @@ static int oxp_cfg_probe(struct hid_device *hdev, u16 up)
  		return 0;
  
  skip_rgb:
+-	mod_delayed_work(system_wq, &oxp_mcu_init, msecs_to_jiffies(50));
+-
 +	bmap_1 = devm_kzalloc(&hdev->dev, sizeof(struct oxp_bmap_page_1), GFP_KERNEL);
 +	if (!bmap_1)
 +		return dev_err_probe(&hdev->dev, -ENOMEM,
@@ -1967,17 +1979,20 @@ index c62952537d98..1100f1f14f35 100644
 +
 +	drvdata.bmap_1 = bmap_1;
 +	drvdata.bmap_2 = bmap_2;
- 	mod_delayed_work(system_wq, &oxp_mcu_init, msecs_to_jiffies(50));
- 
++	oxp_reset_buttons();
  	drvdata.gamepad_mode = OXP_GP_MODE_XINPUT;
++	mod_delayed_work(system_wq, &oxp_mcu_init, msecs_to_jiffies(50));
+ 
+ 	ret = devm_device_add_group(&hdev->dev, &oxp_cfg_attrs_group);
+ 	if (ret)
 -- 
 2.53.0
 
 From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v2 5/5] HID: hid-oxp: Add Vibration Intensity Attributes
+Subject: [PATCH v3 5/5] HID: hid-oxp: Add Vibration Intensity Attribute
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Date: Tue, 07 Apr 2026 04:13:54 +0000
-Message-Id: <20260407041354.2283201-6-derekjohn.clark@gmail.com>
+Date: Sun, 12 Apr 2026 21:34:44 +0000
+Message-Id: <20260412213444.2231505-6-derekjohn.clark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -1986,13 +2001,15 @@ Adds attribute for setting the rumble intensity level. This setting must
 be re-applied after the gamepad mode is set as doing so resets this to
 the default value.
 
+Reviewed-by: Zhouwang Huang <honjow311@gmail.com>
+Tested-by: Zhouwang Huang <honjow311@gmail.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/hid/hid-oxp.c | 80 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 78 insertions(+), 2 deletions(-)
+ drivers/hid/hid-oxp.c | 78 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
 diff --git a/drivers/hid/hid-oxp.c b/drivers/hid/hid-oxp.c
-index 1100f1f14f35..cad6973089a0 100644
+index 959ec1a90d22..a4e9d41bd3a7 100644
 --- a/drivers/hid/hid-oxp.c
 +++ b/drivers/hid/hid-oxp.c
 @@ -34,6 +34,7 @@ enum oxp_function_index {
@@ -2128,18 +2145,14 @@ index 1100f1f14f35..cad6973089a0 100644
  	NULL,
  };
  
-@@ -1420,10 +1497,9 @@ static int oxp_cfg_probe(struct hid_device *hdev, u16 up)
- 
- 	drvdata.bmap_1 = bmap_1;
+@@ -1422,6 +1499,7 @@ static int oxp_cfg_probe(struct hid_device *hdev, u16 up)
  	drvdata.bmap_2 = bmap_2;
+ 	oxp_reset_buttons();
+ 	drvdata.gamepad_mode = OXP_GP_MODE_XINPUT;
 +	drvdata.rumble_intensity = 5;
  	mod_delayed_work(system_wq, &oxp_mcu_init, msecs_to_jiffies(50));
  
--	drvdata.gamepad_mode = OXP_GP_MODE_XINPUT;
--
  	ret = devm_device_add_group(&hdev->dev, &oxp_cfg_attrs_group);
- 	if (ret)
- 		return dev_err_probe(&hdev->dev, ret,
 -- 
 2.53.0
 
