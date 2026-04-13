@@ -53,7 +53,6 @@ source=(
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
 
-  # 0006-s5-power-v7.patch
   0007-asus-ally-hid.patch
 
   # 0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
