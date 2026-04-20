@@ -3,8 +3,8 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.0.0.sk7
-_pkgver=7.0.0-sk7
+pkgver=7.0.0.sk8
+_pkgver=7.0.0-sk8
 pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
@@ -53,7 +53,7 @@ source=(
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
 
-  0007-asus-ally-hid.patch
+#   0007-asus-ally-hid.patch
 
   # 0008_alsa_hda_tas2781_skip_uefi_calibration_on_asus_rog_xbox_ally_x.patch
 
@@ -70,8 +70,8 @@ source=(
   # https://github.com/ValveSoftware/SteamOS/issues/2037#issuecomment-3680695969
   0020-mmc-RTS525A-card-readers-fix-7.0.patch
 
-  0021-asus-ally-hid-disable-wakeup-attribute-on-N-Key-devi.patch
-  0022-asus-ally-hid-grab-short-press-QAM-on-ROG-Xbox-Ally-.patch
+#   0021-asus-ally-hid-disable-wakeup-attribute-on-N-Key-devi.patch
+#   0022-asus-ally-hid-grab-short-press-QAM-on-ROG-Xbox-Ally-.patch
 
   0024-hdmi-vrr-v3.patch
 
@@ -87,21 +87,18 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('48bf7a10682ee717304ad3f8d79b49dac521070ef881a1c45a51617b0e088134'
+sha256sums=('eee4be968456f2b500cf25bd748b81e97ebe5dbdea1bc5d3b2e20f28aa259c4b'
             '60c1993a788fa906cb81545a035722910dcc217ec146f942a4142ef009ce1d9b'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             '077d2b26fd17b5e2d134c8022803fd007b0a09dc9057506526341652de0efd5f'
             '0f44500fff501d8b8739c263482aa1c6dae900613d14520fc88f6e07a1b90e89'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '91fb7f0ad05b0366c2f50ceb9aaf2f857737c04f79081e1b15145be56f8ac7e2'
-            'e9478a11cef930081d35de82f24946b12c01c6efe8e3cbe0034f0d517d190dd5'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
             '1cff661b301576613a53699ba13964f309d0626d079d5c056735f7eb85d00afe'
             '98f1ab2064951ac20d7e9f5dd80a213d00358dc924b26731264711a041bf7293'
             'df4d144cc849f4d8cd28b522a2307da96f579a50a6218d96e39383c6ac183685'
-            'b82ea99afb7ace8a00a62b0b04f74a25cafb8225d27d4af02e1497b79c31babb'
-            '33ac17b298984e3189abc12d4e64086373fd8965fd3883794acbaa749ee63aa3'
             '172e93a2549bfbc4b4a9bf9bd2c691f5fa294e3051fb08a809004a872d808a4e'
             'ca7bffe681d2f7ba3e90c5ac6513ff4007444e38ed4f03a001309c24bf301c6a'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
