@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=7.0.0.sk8
 _pkgver=7.0.0-sk8
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -78,6 +78,11 @@ source=(
   0025-lenovo_wmi_add_fixes_and_enhancement_v4.patch
 
   0050-platform-x86-msi-wmi-platform-update-tdp-range.patch
+
+  0001-HID-hid-msi-claw-Add-MSI-Claw-configuration-driver.patch
+  0002-HID-hid-msi-claw-Add-M-key-mapping-attributes.patch
+  0003-HID-hid-msi-claw-Add-RGB-control-interface.patch
+  0004-HID-hid-msi-claw-Add-Rumble-Intensity-Attributes.patch
 )
 
 validpgpkeys=(
@@ -101,7 +106,11 @@ sha256sums=('eee4be968456f2b500cf25bd748b81e97ebe5dbdea1bc5d3b2e20f28aa259c4b'
             'df4d144cc849f4d8cd28b522a2307da96f579a50a6218d96e39383c6ac183685'
             '172e93a2549bfbc4b4a9bf9bd2c691f5fa294e3051fb08a809004a872d808a4e'
             'ca7bffe681d2f7ba3e90c5ac6513ff4007444e38ed4f03a001309c24bf301c6a'
-            'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b')
+            'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b'
+            '18e28f8b97bba5e25220d88eb79b3a781275eb57df9c5925a7a3de8dd01e4066'
+            '5e0d0457cee7185d5a2c7c08473b9fd1d027babed47c31aaf3c2e6ed82c7cfc6'
+            '932ef6a0ace04f92ca5c1b2570c0e589b3a5d542d79115422519ba40c146471e'
+            'e982780712278758fc4401f3d081df10eaa05c7a85bfb1a8c278ba9a719d2f8b')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
