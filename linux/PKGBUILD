@@ -3,9 +3,9 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.0.0.sk8
-_pkgver=7.0.0-sk8
-pkgrel=4
+pkgver=7.1.0.sk1
+_pkgver=7.1.0-sk1
+pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -47,8 +47,7 @@ source=(
   # R0001-Revert-drm-amd-display-enable-tf_blend-if-supported-.patch
   # R0002-Revert-drm-re-allow-no-op-changes-on-non-primary-pla.patch
 
-  # "0001-cjktty-6.19.patch::https://github.com/bigshans/cjktty-patches/raw/master/v6.x/cjktty-6.19.patch"
-  0001-cjktty-7.0.patch
+  0001-cjktty-7.1.patch
   "0002-cjktty-32.patch::https://github.com/bigshans/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
   0003-Add-OneXPlayer-HID-RGB-driver.patch
@@ -60,9 +59,6 @@ source=(
   0009-Input-Don-t-program-hw-debounce-for-soc_button_array.patch
   0010-Input-Don-t-send-fake-button-presses-to-wake-system.patch
 
-  0011-hid_add_legion_go_and_go_s_drivers_v6.patch
-
-
 #   0012-iommu-Skip-mapping-at-address-0x0-if-it-already-exis.patch
 
   0012-PCI-PM-Add-MSI-MS-1T41-DMI-quirk-to-skip-forced-D0-i.patch
@@ -72,10 +68,6 @@ source=(
 
 #   0021-asus-ally-hid-disable-wakeup-attribute-on-N-Key-devi.patch
 #   0022-asus-ally-hid-grab-short-press-QAM-on-ROG-Xbox-Ally-.patch
-
-  0024-hdmi-vrr-v3.patch
-
-  0025-lenovo_wmi_add_fixes_and_enhancement_v4.patch
 
   0050-platform-x86-msi-wmi-platform-update-tdp-range.patch
 
@@ -92,20 +84,17 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('eee4be968456f2b500cf25bd748b81e97ebe5dbdea1bc5d3b2e20f28aa259c4b'
-            '60c1993a788fa906cb81545a035722910dcc217ec146f942a4142ef009ce1d9b'
+sha256sums=('f027d46b5106036d613b7a8f0409254f0cec4b8063a78355abf3543d8d869815'
+            'c065093d73eedb78a99370c82e2497228274760b983a0b6b99dc2e4c68b80d6c'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             'd6acab752e7a489a26e2a119393155317b8fe3e13184c5b2b4e3ca1b420f1399'
-            '0f44500fff501d8b8739c263482aa1c6dae900613d14520fc88f6e07a1b90e89'
+            'e7857386064c1c35cb80fb2d0a01b07d97059d32b4d7b40832e1b31a537842c6'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '91fb7f0ad05b0366c2f50ceb9aaf2f857737c04f79081e1b15145be56f8ac7e2'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
-            '1cff661b301576613a53699ba13964f309d0626d079d5c056735f7eb85d00afe'
             '98f1ab2064951ac20d7e9f5dd80a213d00358dc924b26731264711a041bf7293'
             'df4d144cc849f4d8cd28b522a2307da96f579a50a6218d96e39383c6ac183685'
-            '172e93a2549bfbc4b4a9bf9bd2c691f5fa294e3051fb08a809004a872d808a4e'
-            'ca7bffe681d2f7ba3e90c5ac6513ff4007444e38ed4f03a001309c24bf301c6a'
             'f21993ad7e78e7e89f00e37c9d17ed7976f733684be97ea5ec7ccb5eec563b6b'
             '18e28f8b97bba5e25220d88eb79b3a781275eb57df9c5925a7a3de8dd01e4066'
             '5e0d0457cee7185d5a2c7c08473b9fd1d027babed47c31aaf3c2e6ed82c7cfc6'
