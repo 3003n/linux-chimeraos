@@ -3,8 +3,8 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.1.0.sk2
-_pkgver=7.1.0-sk2
+pkgver=7.1.0.sk3
+_pkgver=7.1.0-sk3
 pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
@@ -84,7 +84,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('bc846c64f3536946fd8b601891a0db2d16e5e1e66c8f3b3f61fc7a1b0bc98f68'
+sha256sums=('9740e8e38c60294820255199b39b48d87120602b59dc99afd62e0b0e71007afc'
             'c065093d73eedb78a99370c82e2497228274760b983a0b6b99dc2e4c68b80d6c'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             'd6acab752e7a489a26e2a119393155317b8fe3e13184c5b2b4e3ca1b420f1399'
