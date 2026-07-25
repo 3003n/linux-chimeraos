@@ -5,7 +5,7 @@
 pkgbase=linux-skchos
 pkgver=7.1.4.sk1
 _pkgver=7.1.4-sk1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -52,13 +52,11 @@ source=(
 
   0012-PCI-PM-Add-MSI-MS-1T41-DMI-quirk-to-skip-forced-D0-i.patch
 
-  # OGC features/vrr is only CH7218; keep full HDMI VRR series
-  0024-hdmi-vrr-v3.patch
-
   # Dropped (already in OGC/ogc-7.1.y / skos-ogc-7.1 tree):
   # 0003 OXP HID, 0011 Legion Go, 0001-0004 MSI Claw HID,
   # 0020 MMC RTS525A, 0025 Lenovo WMI, 0050 msi TDP range,
   # 0007/0021/0022 Ally HID
+  # 0024-hdmi-vrr-v3.patch — 7.0 patch fails on 7.1.4; needs rebase (TODO)
 )
 
 validpgpkeys=(
@@ -76,8 +74,7 @@ sha256sums=('64f4ef4b3084586abf0fb10e1d528149e5468f1f5151ec9315c54d3cf5c9f79d'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
-            '98f1ab2064951ac20d7e9f5dd80a213d00358dc924b26731264711a041bf7293'
-            '172e93a2549bfbc4b4a9bf9bd2c691f5fa294e3051fb08a809004a872d808a4e')
+            '98f1ab2064951ac20d7e9f5dd80a213d00358dc924b26731264711a041bf7293')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
