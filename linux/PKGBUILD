@@ -3,9 +3,9 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.1.4.sk1
-_pkgver=7.1.4-sk1
-pkgrel=2
+pkgver=7.1.4.sk2
+_pkgver=7.1.4-sk2
+pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -56,7 +56,7 @@ source=(
   # 0003 OXP HID, 0011 Legion Go, 0001-0004 MSI Claw HID,
   # 0020 MMC RTS525A, 0025 Lenovo WMI, 0050 msi TDP range,
   # 0007/0021/0022 Ally HID
-  # 0024-hdmi-vrr-v3.patch — 7.0 patch fails on 7.1.4; needs rebase (TODO)
+  # 0024-hdmi-vrr — now in skos-ogc-7.1 tree (cachy/7.1/hdmi, tag v7.1.4-sk2)
 )
 
 validpgpkeys=(
@@ -66,7 +66,7 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('64f4ef4b3084586abf0fb10e1d528149e5468f1f5151ec9315c54d3cf5c9f79d'
+sha256sums=('7bbdc79a929cb146934aa5ca8c1b0cdee88eaf1433893b3e620f626d29e60962'
             'c065093d73eedb78a99370c82e2497228274760b983a0b6b99dc2e4c68b80d6c'
             '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
             '2895d0f7a935521feabb7d5b81879fb610adb452be2cc101684a0b3ef9008d50'
