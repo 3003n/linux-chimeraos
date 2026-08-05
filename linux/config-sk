@@ -1,4 +1,4 @@
-# sk-Chimera specific config flags
+# sk-Chimera / SkorionOS specific config flags
 
 # Android
 CONFIG_ASHMEM=y
@@ -13,10 +13,6 @@ CONFIG_ANDROID_BINDER_IPC_SELFTEST=n
 CONFIG_FONT_CJK_16x16=y
 CONFIG_FONT_CJK_32x32=y
 
-# bazzite kernel config
-# CONFIG_AMD_PRIVATE_COLOR=y
-
-#
 CONFIG_MODVERSIONS=y
 
 # Handheld HID (OGC/ogc-7.1.y Kconfig symbols)
@@ -25,5 +21,15 @@ CONFIG_HID_OXP=m
 CONFIG_HID_LENOVO_GO=m
 CONFIG_HID_LENOVO_GO_S=m
 CONFIG_HID_MSI=m
+
+# Handheld platform / audio (formerly pulled via config-bazzite)
+CONFIG_SND_SOC_AW87XXX=m
+CONFIG_AYN_EC=m
+
+# Steam Deck EC/MFD (present in OGC tree; keep for Deck-class devices)
+CONFIG_MFD_STEAMDECK=m
+CONFIG_SENSORS_STEAMDECK=m
+CONFIG_LEDS_STEAMDECK=m
+CONFIG_EXTCON_STEAMDECK=m
 
 CONFIG_NTFS_FS=m

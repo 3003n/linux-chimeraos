@@ -3,8 +3,8 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.1.4.sk5
-_pkgver=7.1.4-sk5
+pkgver=7.1.6.sk1
+_pkgver=7.1.6-sk1
 pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
@@ -37,11 +37,10 @@ options=('!strip')
 _srcname=linux-$_pkgver
 # _srcname=patchwork-$_pkgver
 source=(
-  # Kernel: skos-ogc-7.1 = OGC/ogc-7.1.y + skos deltas (tag = $_srctag)
+  # Kernel: skos-ogc-7.1 = OGC/v7.1.6-ogc4 + skos deltas (tag = $_srctag)
   "https://github.com/SkorionOS/linux/archive/refs/tags/v$_pkgver.tar.gz"
   config  # the main kernel config file
-  # config-chimera # our config that will be merged
-  config-bazzite
+  # config-bazzite dropped: Bazzite-6.17 leftover; useful bits moved to config-sk
   config-sk
 
   0001-cjktty-7.1.patch
@@ -56,7 +55,7 @@ source=(
   # 0003 OXP HID, 0011 Legion Go, 0001-0004 MSI Claw HID,
   # 0020 MMC RTS525A, 0025 Lenovo WMI, 0050 msi TDP range,
   # 0007/0021/0022 Ally HID
-  # 0024-hdmi-vrr — now in skos-ogc-7.1 tree (cachy/7.1/hdmi, tag v7.1.4-sk2)
+  # 0024-hdmi-vrr — now in skos-ogc-7.1 tree
 )
 
 validpgpkeys=(
@@ -66,15 +65,14 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('6e33b7116cb973951ecfa24fa202b916937499fc5e8e5ff4dd968702b076fa0b'
+sha256sums=('e85e3d2825c007f93111eaa736d3631413c5d9b4dc522d64bb2545a1805428e6'
             'd15c56e1e2c1ecabb26e09a37cbfddafda03ea8440a54931c5468f1e5c6015cd'
-            '4e0bc06b0cd7a5bc4ae687b12343bbc28bdbf2465e68e9a021b9370b5743f5ff'
-            '2895d0f7a935521feabb7d5b81879fb610adb452be2cc101684a0b3ef9008d50'
-            '3933b4ba9b0a1c9fd94326cc9d23f98d8b26dc2c302e9787f4a163e3bcb21d3d'
+            'e8aaa0c0d2edc91a3deef3c620ec026bc1dca721695f47da123d97a7d1faac3c'
+            'cfe3dabbafc09d66e3a7493b101f435079ae83e6af861f973e43492a8e52b57a'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'
-            '98f1ab2064951ac20d7e9f5dd80a213d00358dc924b26731264711a041bf7293')
+            '7ae72994bb9c7c477cc1931ce0507ec4be6af5ca4bb9159e1f91430a9d03cb4b')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -178,8 +176,6 @@ prepare() {
   echo "Setting config..."
   cp ../config .config
   _make olddefconfig
-  # scripts/kconfig/merge_config.sh -m .config ../config-chimera
-  scripts/kconfig/merge_config.sh -m .config ../config-bazzite
   scripts/kconfig/merge_config.sh -m .config ../config-sk
   diff -u ../config .config || :
 

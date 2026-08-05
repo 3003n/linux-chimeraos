@@ -1,31 +1,7 @@
 #!/bin/bash
-
-set -e
-
-# URL="https://github.com/hhd-dev/kernel-bazzite/blob/bazzite-6.17/kernel-local?raw=true"
-URL="https://github.com/bazzite-org/patchwork/raw/bazzite-6.17/redhat/configs/custom-overrides/generic/x86/CONFIG_LOCAL"
-
-NAME="config-bazzite"
-
-curl -L "$URL" -o "$NAME".new
-
-if [ -e "$NAME" ]; then
-    # Compare files and skip if identical
-    if cmp -s "$NAME.new" "$NAME"; then
-        echo "文件内容相同，无需更新。"
-        rm "$NAME.new"
-        exit 0
-    fi
-
-    diff -u "$NAME.new" "$NAME" | less
-
-    read -p "是否应用更改？[Y/n] " REPLY
-    echo
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        rm "$NAME.new"
-    else
-        mv "$NAME.new" "$NAME"
-    fi
-else
-    mv "$NAME.new" "$NAME"
-fi
+# Retired: config-bazzite is no longer merged into the 7.1 OGC/skos build.
+# Useful handheld options were moved into config-sk.
+# Historical Bazzite CONFIG_LOCAL source (do not re-enable without review):
+#   https://github.com/bazzite-org/patchwork/raw/bazzite-6.17/redhat/configs/custom-overrides/generic/x86/CONFIG_LOCAL
+echo "bazz_sync.sh is retired; edit config-sk instead." >&2
+exit 1
