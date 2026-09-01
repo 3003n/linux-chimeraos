@@ -3,8 +3,8 @@
 # Modified by SkorionOS team
 
 pkgbase=linux-skchos
-pkgver=7.1.6.sk1
-_pkgver=7.1.6-sk1
+pkgver=7.2.1.sk1
+_pkgver=7.2.1-sk1
 pkgrel=1
 pkgdesc='Linux SkorionOS'
 # _srctag=v$(echo $pkgver | sed -E 's#.sk.#-sk-#')
@@ -37,13 +37,13 @@ options=('!strip')
 _srcname=linux-$_pkgver
 # _srcname=patchwork-$_pkgver
 source=(
-  # Kernel: skos-ogc-7.1 = OGC/v7.1.6-ogc4 + skos deltas (tag = $_srctag)
+  # Kernel: skos-ogc-7.2 = OGC/v7.2.1-ogc3 + skos deltas (tag = $_srctag)
   "https://github.com/SkorionOS/linux/archive/refs/tags/v$_pkgver.tar.gz"
   config  # the main kernel config file
   # config-bazzite dropped: Bazzite-6.17 leftover; useful bits moved to config-sk
   config-sk
 
-  0001-cjktty-7.1.patch
+  0001-cjktty-7.2.patch
   "0002-cjktty-32.patch::https://github.com/bigshans/cjktty-patches/raw/master/cjktty-add-cjk32x32-font-data.patch"
 
   0009-Input-Don-t-program-hw-debounce-for-soc_button_array.patch
@@ -51,11 +51,11 @@ source=(
 
   0012-PCI-PM-Add-MSI-MS-1T41-DMI-quirk-to-skip-forced-D0-i.patch
 
-  # Dropped (already in OGC/ogc-7.1.y / skos-ogc-7.1 tree):
+  # Dropped (already in OGC/ogc-7.2.y / skos-ogc-7.2 tree):
   # 0003 OXP HID, 0011 Legion Go, 0001-0004 MSI Claw HID,
   # 0020 MMC RTS525A, 0025 Lenovo WMI, 0050 msi TDP range,
   # 0007/0021/0022 Ally HID
-  # 0024-hdmi-vrr — now in skos-ogc-7.1 tree
+  # 0024-hdmi-vrr — now in OGC/ogc-7.2.y
 )
 
 validpgpkeys=(
@@ -65,10 +65,10 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 
-sha256sums=('60710015f385e0b2dd4620a8348edbe59277a523f748751cea03ab57453ddd0c'
+sha256sums=('4cdcc6d8f3f332ffb964d606e6c5533e0ff91d4d1caa51d9fdd85c7c67ebab1b'
             'd15c56e1e2c1ecabb26e09a37cbfddafda03ea8440a54931c5468f1e5c6015cd'
-            'e8aaa0c0d2edc91a3deef3c620ec026bc1dca721695f47da123d97a7d1faac3c'
-            'cfe3dabbafc09d66e3a7493b101f435079ae83e6af861f973e43492a8e52b57a'
+            '90956ca0d6a622222bf44733495d708a40efcd6fc5f5ee368aa1967d19ab7f9b'
+            '252c69ec48019660dce565c45e287626793f84939cec249d62644a11ea9842a8'
             'c648ff21f0a5714743bbae85d6c6e1ed2bf961b6bca976d4c6b4c8d3f6b2739f'
             '9cb13c1040b149bd378a75fac3834e3802361816b5f8e51800358c440210b0e4'
             'fcd9c94156a3d99c0b2eab05f9edf12fe07a8cd826df1bf64347b4874f864684'

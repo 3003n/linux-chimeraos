@@ -15,7 +15,7 @@ CONFIG_FONT_CJK_32x32=y
 
 CONFIG_MODVERSIONS=y
 
-# Handheld HID (OGC/ogc-7.1.y Kconfig symbols)
+# Handheld HID (OGC/ogc-7.2.y Kconfig symbols)
 CONFIG_HID_ASUS_ALLY=m
 CONFIG_HID_OXP=m
 CONFIG_HID_LENOVO_GO=m
